@@ -18,10 +18,10 @@ const valueProcessor = function (
 describe("generateReview from CKL", () => {
   it("generates review object with default settings", async () => {
     const importOptions = {
-      autoStatus: "saved", 
-      unreviewed: "commented", 
+      autoStatus: "saved",
+      unreviewed: "commented",
       unreviewedCommented: "informational",
-      emptyDetail: "replace", 
+      emptyDetail: "replace",
       emptyComment: "ignore",
       allowCustom: true,
     };
@@ -63,17 +63,15 @@ describe("generateReview from CKL", () => {
       valueProcessor,
       XMLParser,
     });
-    
-      // ensuring that each review has a status that matches the expected status
-      review.checklists[0].reviews.forEach((reviewItem) => {
-        const expectedStatus = expectedStatuses[reviewItem.ruleId];
-        expect(reviewItem.status).to.equal(expectedStatus);
-      });
-    
+
+    // ensuring that each review has a status that matches the expected status
+    review.checklists[0].reviews.forEach((reviewItem) => {
+      const expectedStatus = expectedStatuses[reviewItem.ruleId];
+      expect(reviewItem.status).to.equal(expectedStatus);
+    });
   });
 
   it("generates review object with autoStatus = null to simulate set Review Status to: Keep Exisiting ", async () => {
-
     const importOptions = {
       autoStatus: "null",
       unreviewed: "commented",
@@ -109,11 +107,10 @@ describe("generateReview from CKL", () => {
       valueProcessor,
       XMLParser,
     });
-     // ensuring that each review does not have a status
-    review.checklists.forEach((checklist) => {
-      checklist.reviews.forEach((reviewItem) => {
-        expect(reviewItem.status).to.not.exist;
-      });
+    // ensuring that each review does not have a status
+
+    review.checklists[0].reviews.forEach((reviewItem) => {
+      expect(reviewItem.status).to.not.exist;
     });
   });
 
@@ -167,11 +164,10 @@ describe("generateReview from CKL", () => {
     };
 
     // ensuring that each review has a status that matches the expected status
-    review.checklists.forEach((checklist) => {
-      checklist.reviews.forEach((reviewItem) => {
-        const expectedStatus = expectedStatuses[reviewItem.ruleId];
-        expect(reviewItem.status).to.equal(expectedStatus);
-      });
+
+    review.checklists[0].reviews.forEach((reviewItem) => {
+      const expectedStatus = expectedStatuses[reviewItem.ruleId];
+      expect(reviewItem.status).to.equal(expectedStatus);
     });
   });
 
@@ -209,7 +205,7 @@ describe("generateReview from CKL", () => {
       valueProcessor,
       XMLParser,
     });
-     // expected statuses for each rule
+    // expected statuses for each rule
     const expectedStatuses = {
       "SV-207184r695317_rule": "accepted",
       "SV-207185r608988_rule": "saved",
@@ -221,11 +217,10 @@ describe("generateReview from CKL", () => {
       "SV-207191r803418_rule": "accepted",
     };
     // ensuring that each review has a status that matches the expected status
-    review.checklists.forEach((checklist) => {
-      checklist.reviews.forEach((reviewItem) => {
-        const expectedStatus = expectedStatuses[reviewItem.ruleId];
-        expect(reviewItem.status).to.equal(expectedStatus);
-      });
+
+    review.checklists[0].reviews.forEach((reviewItem) => {
+      const expectedStatus = expectedStatuses[reviewItem.ruleId];
+      expect(reviewItem.status).to.equal(expectedStatus);
     });
   });
 
@@ -266,11 +261,10 @@ describe("generateReview from CKL", () => {
       XMLParser,
     });
 
-    
     review.checklists[0].reviews.forEach((reviewItem) => {
       // expcet that each review has a commment value or detail value that != null
       expect(reviewItem.detail || reviewItem.comment).to.not.be.null;
-    })
+    });
   });
 
   it("generates review object with 'unreviewed = always' to simulate include unrevieweed rules: Always ", async () => {
@@ -310,7 +304,7 @@ describe("generateReview from CKL", () => {
       XMLParser,
     });
 
-//console.log(JSON.stringify(review, null, 2));
+    //console.log(JSON.stringify(review, null, 2));
 
     // const expectedNumberOfReviews = 8;
     // const reviews = review.checklists[0].reviews;
