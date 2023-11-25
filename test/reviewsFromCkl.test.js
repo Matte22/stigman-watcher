@@ -1284,25 +1284,261 @@ describe("generateReview from CKL", () => {
     expect(review.checklists[0].reviews[0].comment).to.exist;
     expect(review.checklists[0].reviews[0].status).to.be.equal("submitted");
   });
-  it("testing multiStigs for autostatus", async () => {
+  it("testing multiStigs for autostatus =  saved and unreviewed = alwasys to ensure we get the same total reviews out as we put in ", async () => {
+    const importOptions = {
+      autoStatus: "saved",
+      unreviewed: "always",
+      unreviewedCommented: "informational",
+      emptyDetail: "replace",
+      emptyComment: "ignore",
+      allowCustom: true,
+    };
 
+    const fieldSettings = {
+      detail: {
+        enabled: "always",
+        required: "always",
+      },
+      comment: {
+        enabled: "findings",
+        required: "findings",
+      },
+    };
+
+    const allowAccept = true;
+
+    const filePath = "./WATCHER-test-files/WATCHER/Asset_a-multi-stig.ckl";
+
+    const totalReviewsPreProcessed = await getTotalVulnCount(filePath);
+
+    const review = await generateReviewObject(
+      filePath,
+      importOptions,
+      fieldSettings,
+      allowAccept
+    );
+
+    const totalReviewsInOutput = review.checklists.reduce(
+      (acc, checklist) => acc + checklist.reviews.length,
+      0
+    );
+
+    // checking that out input and output counts of total vulns/reviews match
+    expect(totalReviewsInOutput).to.equal(totalReviewsInOutput);
   });
-  it("testing multiStigs for autostatus", async () => {
+  it("testing multiStigs for autostatus = saved and unreviewed = always to ensure that we have all saved reviews ", async () => {
+    const importOptions = {
+      autoStatus: "saved",
+      unreviewed: "always",
+      unreviewedCommented: "informational",
+      emptyDetail: "replace",
+      emptyComment: "ignore",
+      allowCustom: true,
+    };
 
+    const fieldSettings = {
+      detail: {
+        enabled: "always",
+        required: "always",
+      },
+      comment: {
+        enabled: "findings",
+        required: "findings",
+      },
+    };
+
+    const allowAccept = true;
+
+    const filePath = "./WATCHER-test-files/WATCHER/Asset_a-multi-stig.ckl";
+
+    const review = await generateReviewObject(
+      filePath,
+      importOptions,
+      fieldSettings,
+      allowAccept
+    );
+
+    // checking that all reviews are saved
+    review.checklists.forEach((checklist) => {
+      checklist.reviews.forEach((reviewItem) => {
+        expect(reviewItem.status).to.equal("saved");
+      });
+    });
   });
-  it("testing multiStigs for autostatus", async () => {
 
+  it("testing Multi stig CKL statistics for default settings", async () => {
+    const importOptions = {
+      autoStatus: "saved",
+      unreviewed: "commented",
+      unreviewedCommented: "informational",
+      emptyDetail: "replace",
+      emptyComment: "ignore",
+      allowCustom: true,
+    };
+
+    const fieldSettings = {
+      detail: {
+        enabled: "always",
+        required: "always",
+      },
+      comment: {
+        enabled: "findings",
+        required: "findings",
+      },
+    };
+
+    const allowAccept = true;
+
+    const filePath = "./WATCHER-test-files/WATCHER/Asset_a-multi-stig.ckl";
+
+    const review = await generateReviewObject(
+      filePath,
+      importOptions,
+      fieldSettings,
+      allowAccept
+    );
+
+
+    review.checklists.forEach((checklist) => {
+      expect(checklist.stats).to.exist;
+      expect(checklist.stats.pass).to.equal(3);
+      expect(checklist.stats.fail).to.equal(2);
+      expect(checklist.stats.notapplicable).to.equal(1);
+      expect(checklist.stats.notchecked).to.equal(0);
+      expect(checklist.stats.notselected).to.equal(0);
+      expect(checklist.stats.informational).to.equal(2);
+      expect(checklist.stats.error).to.equal(0);
+      expect(checklist.stats.fixed).to.equal(0);
+      expect(checklist.stats.unknown).to.equal(0);
+
+ 
+    });
   });
-  it("testing multiStigs for autostatus", async () => {
+  it("testing Multi stig CKL statistics for alterred settings", async () => {
+    const importOptions = {
+      autoStatus: "saved",
+      unreviewed: "always", // this is changed
+      unreviewedCommented: "notchecked",// this is changed
+      emptyDetail: "replace",
+      emptyComment: "ignore",
+      allowCustom: true,
+    };
 
+    const fieldSettings = {
+      detail: {
+        enabled: "always",
+        required: "always",
+      },
+      comment: {
+        enabled: "findings",
+        required: "findings",
+      },
+    };
+
+    const allowAccept = true;
+
+    const filePath = "./WATCHER-test-files/WATCHER/Asset_a-multi-stig.ckl";
+
+    const review = await generateReviewObject(
+      filePath,
+      importOptions,
+      fieldSettings,
+      allowAccept
+    );
+
+    console.log(JSON.stringify(review, null, 2));
+
+    review.checklists.forEach((checklist) => {
+      expect(checklist.stats).to.exist;
+      expect(checklist.stats.pass).to.equal(3);
+      expect(checklist.stats.fail).to.equal(2);
+      expect(checklist.stats.notapplicable).to.equal(1);
+      expect(checklist.stats.notchecked).to.equal(24);
+      expect(checklist.stats.notselected).to.equal(0);
+      expect(checklist.stats.informational).to.equal(0);
+      expect(checklist.stats.error).to.equal(0);
+      expect(checklist.stats.fixed).to.equal(0);
+      expect(checklist.stats.unknown).to.equal(0);
+
+ 
+    });
   });
- it("testing multiStigs for unreviewed", async () => {
 
-  }); 
-  it("testing multiStigs for unreviewed", async () => {
+  it("testing metaData for <WEB_OR_DATABASE>false", async () => {
+    const importOptions = {
+      autoStatus: "saved",
+      unreviewed: "always",
+      unreviewedCommented: "informational",
+      emptyDetail: "replace",
+      emptyComment: "ignore",
+      allowCustom: true,
+    };
 
+    const fieldSettings = {
+      detail: {
+        enabled: "always",
+        required: "always",
+      },
+      comment: {
+        enabled: "findings",
+        required: "findings",
+      },
+    };
+
+    const allowAccept = true;
+
+    const filePath =
+      "./WATCHER-test-files/WATCHER/Single-Vuln-fail-with-Comment.ckl";
+
+    const review = await generateReviewObject(
+      filePath,
+      importOptions,
+      fieldSettings,
+      allowAccept
+    );
+
+    expect(review.target.metadata).to.exist;
+    expect(review.target.metadata).to.be.an("object");
+    expect(review.target.metadata.cklRole).to.equal("None");
   });
-  it("testing multiStigs for unreviewed", async () => {
+  it("testing metaData for <WEB_OR_DATABASE>true", async () => {
+    const importOptions = {
+      autoStatus: "saved",
+      unreviewed: "always",
+      unreviewedCommented: "informational",
+      emptyDetail: "replace",
+      emptyComment: "ignore",
+      allowCustom: true,
+    };
 
+    const fieldSettings = {
+      detail: {
+        enabled: "always",
+        required: "always",
+      },
+      comment: {
+        enabled: "findings",
+        required: "findings",
+      },
+    };
+
+    const allowAccept = true;
+
+    const filePath =
+      "./WATCHER-test-files/WATCHER/Single-Vuln-fail-WEBORDATABASE-true.ckl";
+
+    const review = await generateReviewObject(
+      filePath,
+      importOptions,
+      fieldSettings,
+      allowAccept
+    );
+
+    expect(review.target.metadata).to.exist;
+    expect(review.target.metadata).to.be.an("object");
+    expect(review.target.metadata.cklRole).to.equal("None");
+    expect(review.target.metadata.cklWebOrDatabase).to.equal("true");
+    expect(review.target.metadata.cklHostName).to.equal("Asset_aaaaaaaaaa");
+    expect(review.target.metadata.cklWebDbSite).to.equal("test");
   });
 });
