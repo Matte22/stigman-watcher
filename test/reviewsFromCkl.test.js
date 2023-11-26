@@ -1446,7 +1446,7 @@ describe("generateReview from CKL", () => {
       allowAccept
     );
 
-    console.log(JSON.stringify(review, null, 2));
+  
 
     review.checklists.forEach((checklist) => {
       expect(checklist.stats).to.exist;
@@ -1454,6 +1454,54 @@ describe("generateReview from CKL", () => {
       expect(checklist.stats.fail).to.equal(2);
       expect(checklist.stats.notapplicable).to.equal(1);
       expect(checklist.stats.notchecked).to.equal(24);
+      expect(checklist.stats.notselected).to.equal(0);
+      expect(checklist.stats.informational).to.equal(0);
+      expect(checklist.stats.error).to.equal(0);
+      expect(checklist.stats.fixed).to.equal(0);
+      expect(checklist.stats.unknown).to.equal(0);
+
+ 
+    });
+  });it("testing Multi stig CKL statistics for alterred settings", async () => {
+    const importOptions = {
+      autoStatus: "saved",
+      unreviewed: "never", // this is changed
+      unreviewedCommented: "informational",// this is changed
+      emptyDetail: "replace",
+      emptyComment: "ignore",
+      allowCustom: true,
+    };
+
+    const fieldSettings = {
+      detail: {
+        enabled: "always",
+        required: "always",
+      },
+      comment: {
+        enabled: "findings",
+        required: "findings",
+      },
+    };
+
+    const allowAccept = true;
+
+    const filePath = "./WATCHER-test-files/WATCHER/Asset_a-multi-stig.ckl";
+
+    const review = await generateReviewObject(
+      filePath,
+      importOptions,
+      fieldSettings,
+      allowAccept
+    );
+
+    console.log(JSON.stringify(review, null, 2));
+
+    review.checklists.forEach((checklist) => {
+      expect(checklist.stats).to.exist;
+      expect(checklist.stats.pass).to.equal(3);
+      expect(checklist.stats.fail).to.equal(2);
+      expect(checklist.stats.notapplicable).to.equal(1);
+      expect(checklist.stats.notchecked).to.equal(0);
       expect(checklist.stats.notselected).to.equal(0);
       expect(checklist.stats.informational).to.equal(0);
       expect(checklist.stats.error).to.equal(0);
