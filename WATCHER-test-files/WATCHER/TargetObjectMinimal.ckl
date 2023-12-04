@@ -3,17 +3,17 @@
 <!-- Classification: NONE -->
 <CHECKLIST>
   <ASSET>
-    <ROLE>None</ROLE>
-    <ASSET_TYPE>Non-Computing</ASSET_TYPE>
-    <MARKING>NONE</MARKING>
-    <HOST_NAME>Asset_aaaaaaaaaa</HOST_NAME>
-    <HOST_IP></HOST_IP>
-    <HOST_MAC></HOST_MAC>
+    <ROLE/>
+    <ASSET_TYPE/>
+    <MARKING></MARKING>
+    <HOST_NAME>MyAsset</HOST_NAME>
+    <HOST_IP/>
+    <HOST_MAC/>
     <HOST_GUID/>
-    <HOST_FQDN></HOST_FQDN>
+    <HOST_FQDN/>
     <TECH_AREA/>
-    <TARGET_KEY>2777</TARGET_KEY>
-    <WEB_OR_DATABASE>false</WEB_OR_DATABASE>
+    <TARGET_KEY/>
+    <WEB_OR_DATABASE/>
     <WEB_DB_SITE/>
     <WEB_DB_INSTANCE/>
   </ASSET>
@@ -65,11 +65,11 @@
       <VULN>
         <STIG_DATA>
           <VULN_ATTRIBUTE>Vuln_Num</VULN_ATTRIBUTE>
-          <ATTRIBUTE_DATA>V-257777</ATTRIBUTE_DATA>
+          <ATTRIBUTE_DATA>V-207191</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STIG_DATA>
           <VULN_ATTRIBUTE>Severity</VULN_ATTRIBUTE>
-          <ATTRIBUTE_DATA>high</ATTRIBUTE_DATA>
+          <ATTRIBUTE_DATA>medium</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STIG_DATA>
           <VULN_ATTRIBUTE>Weight</VULN_ATTRIBUTE>
@@ -77,23 +77,27 @@
         </STIG_DATA>
         <STIG_DATA>
           <VULN_ATTRIBUTE>Group_Title</VULN_ATTRIBUTE>
-          <ATTRIBUTE_DATA>SRG-OS-000480-GPOS-00227</ATTRIBUTE_DATA>
+          <ATTRIBUTE_DATA>SRG-NET-000063</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STIG_DATA>
           <VULN_ATTRIBUTE>Rule_ID</VULN_ATTRIBUTE>
-          <ATTRIBUTE_DATA>SV-257777r925318_rule</ATTRIBUTE_DATA>
+          <ATTRIBUTE_DATA>SV-207191r803418_rule</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STIG_DATA>
           <VULN_ATTRIBUTE>Rule_Ver</VULN_ATTRIBUTE>
-          <ATTRIBUTE_DATA>RHEL-09-211010</ATTRIBUTE_DATA>
+          <ATTRIBUTE_DATA>SRG-NET-000063-VPN-000210</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STIG_DATA>
           <VULN_ATTRIBUTE>Rule_Title</VULN_ATTRIBUTE>
-          <ATTRIBUTE_DATA>RHEL 9 must be a vendor-supported release.</ATTRIBUTE_DATA>
+          <ATTRIBUTE_DATA>The remote access VPN Gateway must use a digital signature generated using FIPS-validated algorithms and an approved hash function to protect the integrity of TLS remote access sessions.</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STIG_DATA>
           <VULN_ATTRIBUTE>Vuln_Discuss</VULN_ATTRIBUTE>
-          <ATTRIBUTE_DATA>An operating system release is considered &quot;supported&quot; if the vendor continues to provide security patches for the product. With an unsupported release, it will not be possible to resolve security issues discovered in the system software.Red Hat offers the Extended Update Support (EUS) add-on to a Red Hat Enterprise Linux subscription, for a fee, for those customers who wish to standardize on a specific minor release for an extended period.</ATTRIBUTE_DATA>
+          <ATTRIBUTE_DATA>Without integrity protection, unauthorized changes may be made to the log files and reliable forensic analysis and discovery of the source of malicious system activity may be degraded.
+
+Remote access (e.g., RDP) is access to DoD nonpublic information systems by an authorized user (or an information system) communicating through an external, non-organization-controlled network. Remote access methods include broadband and wireless.
+
+Integrity checks include cryptographic checksums, digital signatures, or hash functions. Federal Information Processing Standard (FIPS) 186-4, Digital Signature Standard (DSS), specifies three NIST-approved algorithms: DSA, RSA, and ECDSA. All three are used to generate and verify digital signatures in conjunction with an approved hash function.</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STIG_DATA>
           <VULN_ATTRIBUTE>IA_Controls</VULN_ATTRIBUTE>
@@ -101,11 +105,13 @@
         </STIG_DATA>
         <STIG_DATA>
           <VULN_ATTRIBUTE>Check_Content</VULN_ATTRIBUTE>
-          <ATTRIBUTE_DATA>Verify that the version or RHEL 9 is vendor supported with the following command:$ cat /etc/redhat-release Red Hat Enterprise Linux release 9.2 (Plow)If the installed version of RHEL 9 is not supported, this is a finding.</ATTRIBUTE_DATA>
+          <ATTRIBUTE_DATA>Verify the remote access VPN Gateway uses a digital signature generated using FIPS-validated algorithms and an approved hash function to protect the integrity of remote access sessions.
+
+If the remote access VPN Gateway does not use a digital signature generated using FIPS-validated algorithms and an approved hash function to protect the integrity of remote access sessions, this is a finding.</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STIG_DATA>
           <VULN_ATTRIBUTE>Fix_Text</VULN_ATTRIBUTE>
-          <ATTRIBUTE_DATA>Upgrade to a supported version of RHEL 9.</ATTRIBUTE_DATA>
+          <ATTRIBUTE_DATA>Configure the remote access VPN Gateway to use a digital signature generated using FIPS-validated algorithms and an approved hash function to protect the integrity of remote access sessions.</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STIG_DATA>
           <VULN_ATTRIBUTE>False_Positives</VULN_ATTRIBUTE>
@@ -145,15 +151,15 @@
         </STIG_DATA>
         <STIG_DATA>
           <VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-          <ATTRIBUTE_DATA>Red Hat Enterprise Linux 9 TRUNCATED :: Version 1, Release: 1 Benchmark Date: 22 Sep 2023</ATTRIBUTE_DATA>
+          <ATTRIBUTE_DATA>Virtual Private Network (VPN) TRUNCATED :: Version 2, Release: 5 Benchmark Date: 07 Jun 2023</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STIG_DATA>
           <VULN_ATTRIBUTE>CCI_REF</VULN_ATTRIBUTE>
-          <ATTRIBUTE_DATA>CCI-000366</ATTRIBUTE_DATA>
+          <ATTRIBUTE_DATA>CCI-001453</ATTRIBUTE_DATA>
         </STIG_DATA>
-        <STATUS>Not_Reviewed</STATUS>
-       <FINDING_DETAILS>xyz</FINDING_DETAILS>
-        <COMMENTS>xyz</COMMENTS>
+        <STATUS>NotAFinding</STATUS>
+         <FINDING_DETAILS/>
+        <COMMENTS/>
         <SEVERITY_OVERRIDE/>
         <SEVERITY_JUSTIFICATION/>
       </VULN>

@@ -158,7 +158,7 @@ If the IPsec VPN Gateway does not use Encapsulating Security Payload (ESP) in tu
           <ATTRIBUTE_DATA>CCI-001414</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STATUS>NotAFinding</STATUS>
-        <FINDING_DETAILS>xxxxxxxxx</FINDING_DETAILS>
+        <FINDING_DETAILS>xyz</FINDING_DETAILS>
         <COMMENTS></COMMENTS>
         <SEVERITY_OVERRIDE/>
         <SEVERITY_JUSTIFICATION/>
@@ -293,7 +293,7 @@ Use the following verbiage for operating systems that have severe limitations on
           <ATTRIBUTE_DATA>CCI-000048</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STATUS>Open</STATUS>
-        <FINDING_DETAILS>yyyyyyyyyy</FINDING_DETAILS>
+        <FINDING_DETAILS>xyz</FINDING_DETAILS>
         <COMMENTS></COMMENTS>
         <SEVERITY_OVERRIDE/>
         <SEVERITY_JUSTIFICATION/>
@@ -398,7 +398,7 @@ If the Remote Access VPN Gateway and/or client does not retain the Standard Mand
           <ATTRIBUTE_DATA>CCI-000050</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STATUS>Not_Applicable</STATUS>
-        <FINDING_DETAILS>xxxxxxxxxxx</FINDING_DETAILS>
+        <FINDING_DETAILS>xyz</FINDING_DETAILS>
         <COMMENTS></COMMENTS>
         <SEVERITY_OVERRIDE/>
         <SEVERITY_JUSTIFICATION/>
@@ -551,7 +551,7 @@ If the publicly accessible VPN Gateway does not display the Standard Mandatory D
           <ATTRIBUTE_DATA>CCI-001388</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STATUS>Not_Reviewed</STATUS>
-        <FINDING_DETAILS>xxxxxxxxx</FINDING_DETAILS>
+        <FINDING_DETAILS>xyz</FINDING_DETAILS>
         <COMMENTS></COMMENTS>
         <SEVERITY_OVERRIDE/>
         <SEVERITY_JUSTIFICATION/>
@@ -650,7 +650,7 @@ If the VPN Gateway does not notify the user, upon successful logon (access), of 
           <ATTRIBUTE_DATA>CCI-000053</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STATUS>NotAFinding</STATUS>
-        <FINDING_DETAILS>xxxxxxxxxxxxxxxxxxxxxxxxxx</FINDING_DETAILS>
+        <FINDING_DETAILS>xyz</FINDING_DETAILS>
         <COMMENTS></COMMENTS>
         <SEVERITY_OVERRIDE/>
         <SEVERITY_JUSTIFICATION/>
@@ -751,7 +751,7 @@ If the VPN Gateway does not limit the number of concurrent sessions for user acc
           <ATTRIBUTE_DATA>CCI-000054</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STATUS>Not_Reviewed</STATUS>
-        <FINDING_DETAILS>xxxxxxxxxxxxxxxxxxx</FINDING_DETAILS>
+        <FINDING_DETAILS>xyz</FINDING_DETAILS>
         <COMMENTS></COMMENTS>
         <SEVERITY_OVERRIDE/>
         <SEVERITY_JUSTIFICATION/>
@@ -850,7 +850,7 @@ If the TLS VPN Gateway does not use TLS 1.2, at a minimum, to protect the confid
           <ATTRIBUTE_DATA>CCI-000068</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STATUS>NotAFinding</STATUS>
-        <FINDING_DETAILS>xxxxxxxxxxxxxxxxx</FINDING_DETAILS>
+        <FINDING_DETAILS>xyz</FINDING_DETAILS>
         <COMMENTS></COMMENTS>
         <SEVERITY_OVERRIDE/>
         <SEVERITY_JUSTIFICATION/>
@@ -951,8 +951,8 @@ If the remote access VPN Gateway does not use a digital signature generated usin
           <ATTRIBUTE_DATA>CCI-001453</ATTRIBUTE_DATA>
         </STIG_DATA>
         <STATUS>Open</STATUS>
-        <FINDING_DETAILS>yyyyyyyyyyyyyyyyyyyyyyyyy</FINDING_DETAILS>
-        <COMMENTS>zzzzzzzzzzzzzzzzzzzzzz</COMMENTS>
+        <FINDING_DETAILS>xyz</FINDING_DETAILS>
+        <COMMENTS>xyz</COMMENTS>
         <SEVERITY_OVERRIDE/>
         <SEVERITY_JUSTIFICATION/>
       </VULN>
