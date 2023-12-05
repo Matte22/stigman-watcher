@@ -47,8 +47,8 @@ const parseOptions = {
   }
 }
 
-describe('Checklist array test', () => {
-  it('', async () => {
+describe('Checklist array testing for correct benchmarkId and revisionStr', () => {
+  it("testing that 'checklist' xml elements benchmarkId and revisionStr are parsed", async () => {
     const importOptions = {
       autoStatus: 'submitted',
       unreviewed: 'commented',
@@ -71,7 +71,7 @@ describe('Checklist array test', () => {
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Asset_a-VPN_TRUNCATED-V2R5.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Asset_a-VPN_TRUNCATED-V2R5.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -80,13 +80,15 @@ describe('Checklist array test', () => {
       allowAccept
     )
 
+    // console.log(JSON.stringify(review, null, 2))
+
     expect(review.checklists).to.be.an('array')
     expect(review.checklists.length).to.equal(1)
     expect(review.checklists[0].benchmarkId).to.equal('VPN_TRUNCATED')
     expect(review.checklists[0].revisionStr).to.equal('V2R5')
   })
 
-  it('Checklist array test multistig', async () => {
+  it('A multi-stig Checklist array testing for correct benchmarkId and revisionStr', async () => {
     const importOptions = {
       autoStatus: 'submitted',
       unreviewed: 'commented',
@@ -108,7 +110,7 @@ describe('Checklist array test', () => {
     }
     const allowAccept = true
 
-    const filePath = './WATCHER-test-files/WATCHER/Asset_b-multi-stig.ckl'
+    const filePath = './WATCHER-test-files/WATCHER/ckl/Asset_b-multi-stig.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -116,8 +118,6 @@ describe('Checklist array test', () => {
       fieldSettings,
       allowAccept
     )
-
-    console.log(JSON.stringify(review, null, 2))
 
     const expectedChecklists = [
       {

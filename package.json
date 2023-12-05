@@ -13,7 +13,20 @@
     "node": ">=14"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "nyc mocha"
+  },
+  "nyc": {
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ],
+    "include": [
+      "lib/**/*.js"
+    ],
+    "exclude": [
+      "test/**/*.js"
+    ],
+    "all": true
   },
   "dependencies": {
     "atob": "^2.1.2",
@@ -34,6 +47,7 @@
   },
   "devDependencies": {
     "chai": "^4.3.10",
-    "mocha": "^10.2.0"
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0"
   }
 }

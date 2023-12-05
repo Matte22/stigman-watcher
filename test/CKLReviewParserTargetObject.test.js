@@ -47,8 +47,8 @@ const parseOptions = {
   }
 }
 
-describe('Target object test', () => {
-  it('', async () => {
+describe('Test that an asset with the given fields are all parsed correctly', () => {
+  it('Testing a target asset with with a cklRole and normal data', async () => {
     const importOptions = {
       autoStatus: 'submitted',
       unreviewed: 'commented',
@@ -70,7 +70,7 @@ describe('Target object test', () => {
     }
     const allowAccept = true
 
-    const filePath = './WATCHER-test-files/WATCHER/TargetObjectBasic.ckl'
+    const filePath = './WATCHER-test-files/WATCHER/ckl/TargetObjectBasic.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -93,10 +93,9 @@ describe('Target object test', () => {
 
     expect(review.target).to.deep.equal(expectedTarget)
 
-    // console.log(JSON.stringify(review.target, null, 2))
   })
 
-  it('', async () => {
+  it('testing a target asset with the minimum amount of fields', async () => {
     const importOptions = {
       autoStatus: 'submitted',
       unreviewed: 'commented',
@@ -118,7 +117,7 @@ describe('Target object test', () => {
     }
     const allowAccept = true
 
-    const filePath = './WATCHER-test-files/WATCHER/TargetObjectMinimal.ckl'
+    const filePath = './WATCHER-test-files/WATCHER/ckl/TargetObjectMinimal.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -139,10 +138,9 @@ describe('Target object test', () => {
 
     expect(review.target).to.deep.equal(expectedTarget)
 
-    //   console.log(JSON.stringify(review.target, null, 2))
   })
 
-  it('', async () => {
+  it('testing a target asset with a complete set of metadata.', async () => {
     const importOptions = {
       autoStatus: 'submitted',
       unreviewed: 'commented',
@@ -164,7 +162,7 @@ describe('Target object test', () => {
     }
     const allowAccept = true
 
-    const filePath = './WATCHER-test-files/WATCHER/TargetObjectMetaData.ckl'
+    const filePath = './WATCHER-test-files/WATCHER/ckl/TargetObjectMetaData.ckl'
 
     const review = await generateReviewObject(
       filePath,

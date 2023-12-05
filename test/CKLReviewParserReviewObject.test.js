@@ -47,23 +47,6 @@ const parseOptions = {
   }
 }
 
-// async function getTotalVulnCount (filePath) {
-//   const data = await fs.readFile(filePath, 'utf8')
-//   const parser = new XMLParser(parseOptions)
-//   const parsed = parser.parse(data)
-
-//   let totalVulnCount = 0
-//   for (const checklist of parsed.CHECKLIST) {
-//     for (const stigs of checklist.STIGS) {
-//       for (const stig of stigs.iSTIG) {
-//         totalVulnCount += stig.VULN.length
-//       }
-//     }
-//   }
-
-//   return totalVulnCount
-// }
-
 describe('Import Options, allowAccept for a review object in non multi-stig', () => {
   it('DEFAULT SETTINGS: Primarily testing review "status = saved"', async () => {
     // Test: DEFAULT SETTINGS
@@ -71,7 +54,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Primary Focus:
     // - Ensuring that the 'autoStatus' option in 'importOptions' correctly sets the review status to 'saved'.
     // Secondary Focus:
-    // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail'.
+    // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail', 'ruleId'.
     // These checks ensure that not only is the 'status' property set as expected, but also that
     // other related properties in the review object reflect the correct values as per the given 'importOptions' and 'fieldSettings'.
     // The test utilizes a sample CKL file ('Single-Vuln-notReviewed-Commented-Detailed.ckl') to simulate a real-world scenario.
@@ -99,7 +82,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-notReviewed-Commented-Detailed.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-notReviewed-Commented-Detailed.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -125,8 +108,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Primary Focus:
     // - Ensuring that the 'autoStatus' option in 'importOptions' correctly sets the review status to null (doesnt exist).
     // Secondary Focus:
-    // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail'.
-    // These checks ensure that not only is the 'status' property set as expected, but also that
+    // - Verifying the accuracy of other review properties including 'ruleId', 'result', 'comment', and 'detail'.
     // other related properties in the review object reflect the correct values as per the given 'importOptions' and 'fieldSettings'.
     // The test utilizes a sample CKL file ('Single-Vuln-notReviewed-Commented-Detailed.ckl') to simulate a real-world scenario.
     const importOptions = {
@@ -152,7 +134,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-notReviewed-Commented-Detailed.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-notReviewed-Commented-Detailed.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -179,7 +161,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Primary Focus:
     // - Ensuring that the 'autoStatus' option in 'importOptions' correctly sets the review status to 'submitted' if valid or 'saved' if not valid.
     // Secondary Focus:
-    // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail'.
+    // - Verifying the accuracy of other review properties including ruleId 'result', 'comment', and 'detail'.
     // These checks ensure that not only is the 'status' property set as expected, but also that
     // other related properties in the review object reflect the correct values as per the given 'importOptions' and 'fieldSettings'.
     // The test utilizes a sample CKL file ('Single-Vuln-notReviewed-Commented-Detailed.ckl') to simulate a real-world scenario.
@@ -206,7 +188,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Asset_a-VPN_TRUNCATED-V2R5.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Asset_a-VPN_TRUNCATED-V2R5.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -294,7 +276,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-notReviewed-Commented-Detailed.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-notReviewed-Commented-Detailed.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -348,7 +330,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
 
     const allowAccept = true
     const filePath =
-      './WATCHER-test-files/WATCHER/Asset_a-VPN_TRUNCATED-V2R5.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Asset_a-VPN_TRUNCATED-V2R5.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -440,7 +422,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
 
     const allowAccept = false
     const filePath =
-      './WATCHER-test-files/WATCHER/Asset_a-VPN_TRUNCATED-V2R5.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Asset_a-VPN_TRUNCATED-V2R5.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -501,7 +483,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Test: unreviewed = commented
     // This test validates the behavior of the ckl parser function under the unreviewed = commented settings.
     // Primary Focus:
-    // - Ensuring that the 'autoStatus' option in 'importOptions' correctly imports only reviews with a non complience result that contain a comment and or detail.
+    // - Ensuring that the 'unreviewed' option in 'importOptions' correctly imports only reviews with a non complience result that contain a comment and or detail.
     // note this test will have a review with a comment and detail
     // Secondary Focus:
     // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail', 'ruleId'.
@@ -530,7 +512,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-notReviewed-Commented-Detailed.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-notReviewed-Commented-Detailed.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -560,7 +542,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Test: unreviewed = commented
     // This test validates the behavior of the ckl parser function under the unreviewed = commented settings.
     // Primary Focus:
-    // - Ensuring that the 'autoStatus' option in 'importOptions' correctly imports only reviews with a non complience result that contain a comment and or detail.
+    // - Ensuring that the 'unreviewed' option in 'importOptions' correctly imports only reviews with a non complience result that contain a comment and or detail.
     // note this test will not have any reviews because there will be no comment/detail
     // Secondary Focus:
     // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail', 'ruleId'.
@@ -589,7 +571,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-notReviewed-Empty-CommentDetail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-notReviewed-Empty-CommentDetail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -606,7 +588,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Test: unreviewed = always
     // This test validates the behavior of the ckl parser function under the unreviewed = always settings.
     // Primary Focus:
-    // - Ensuring that the 'autoStatus' option in 'importOptions' correctly imports all reviews without a compliance result and if they have a comment
+    // - Ensuring that the 'unreviewed' option in 'importOptions' correctly imports all reviews without a compliance result and if they have a comment
     // or detail they will be labeled as informational.
     // Secondary Focus:
     // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail', 'ruleId'.
@@ -635,7 +617,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-notReviewed-Commented-Detailed.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-notReviewed-Commented-Detailed.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -658,12 +640,11 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Test: unreviewed = always
     // This test validates the behavior of the ckl parser function under the unreviewed = always settings.
     // Primary Focus:
-    // - Ensuring that the 'autoStatus' option in 'importOptions' correctly imports all reviews without a compliance result
+    // - Ensuring that the 'unreviewed' option in 'importOptions' correctly imports all reviews without a compliance result
     // and without comment or detail to be labled as notchecked.
     // Secondary Focus:
     // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail', 'ruleId'.
     // These checks ensure that not only is the 'status' property set as expected, but also that
-
     // The test utilizes a sample CKL file ('Single-Vuln-notReviewed-Empty-CommentDetail.ckl') to simulate a real-world scenario.
     const importOptions = {
       autoStatus: 'saved',
@@ -688,7 +669,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-notReviewed-Empty-CommentDetail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-notReviewed-Empty-CommentDetail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -710,7 +691,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Test: unreviewed = never
     // This test validates the behavior of the ckl parser function under the unreviewed = never settings.
     // Primary Focus:
-    // - Ensuring that the 'autoStatus' option in 'importOptions' ignores reviews without a compliance result (Nf/na/o)
+    // - Ensuring that the 'unreviewed' option in 'importOptions' ignores reviews without a compliance result (Nf/na/o)
     // Secondary Focus:
     // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail', 'ruleId'.
     // other related properties in the review object reflect the correct values as per the given 'importOptions' and 'fieldSettings'.
@@ -738,7 +719,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-notReviewed-Empty-CommentDetail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-notReviewed-Empty-CommentDetail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -754,7 +735,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Test: unreviewedComment = informational
     // This test validates the behavior of the ckl parser function under the unreviewedComment = informational settings.
     // Primary Focus:
-    // - Ensuring that the 'autoStatus' option in 'importOptions' correctly labels a review without a compliance result..
+    // - Ensuring that the 'unreviewed' option in 'importOptions' correctly labels a review without a compliance result..
     // and with a comment or detail as informational.
     // Secondary Focus:
     // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail', 'ruleId'.
@@ -782,7 +763,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-notReviewed-Commented-Detailed.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-notReviewed-Commented-Detailed.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -805,7 +786,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Test: unreviewedComment = notchecked
     // This test validates the behavior of the ckl parser function under the unreviewedComment = notchecked settings.
     // Primary Focus:
-    // - Ensuring that the 'autoStatus' option in 'importOptions' correctly labels a review without a compliance result..
+    // - Ensuring that the 'unreviewed' option in 'importOptions' correctly labels a review without a compliance result..
     // and with a comment or detail as notchecked.
     // Secondary Focus:
     // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail', 'ruleId'.
@@ -833,7 +814,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-notReviewed-Commented-Detailed.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-notReviewed-Commented-Detailed.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -855,7 +836,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Test: emptyDetail = replace
     // This test validates the behavior of the ckl parser function under the emptyDetail = replace settings.
     // Primary Focus:
-    // - Ensuring that the 'autoStatus' option in 'importOptions' correctly replaces an empty detail with a static message. "There is no detail provided for the assessment"
+    // - Ensuring that the 'emptyDetail' option in 'importOptions' correctly replaces an empty detail with a static message. "There is no detail provided for the assessment"
     // Secondary Focus:
     // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail', 'ruleId'.
     // other related properties in the review object reflect the correct values as per the given 'importOptions' and 'fieldSettings'.
@@ -883,7 +864,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-Pass-With-Comment.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-Pass-With-Comment.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -904,7 +885,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Test: emptyDetail = ignore
     // This test validates the behavior of the ckl parser function under the emptyDetail = ignore settings.
     // Primary Focus:
-    // - Ensuring that the 'autoStatus' option in 'importOptions' correctly replaces an empty detail a null value
+    // - Ensuring that the 'emptyDetail' option in 'importOptions' correctly replaces an empty detail a null value
     // Secondary Focus:
     // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail', 'ruleId'.
     // other related properties in the review object reflect the correct values as per the given 'importOptions' and 'fieldSettings'.
@@ -932,7 +913,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-Pass-With-Comment.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-Pass-With-Comment.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -955,7 +936,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Test: emptyDetail = import
     // This test validates the behavior of the ckl parser function under the emptyDetail = import settings.
     // Primary Focus:
-    // - Ensuring that the 'autoStatus' option in 'importOptions' correctly replaces an empty detail an empty string if no detail is provided
+    // - Ensuring that the 'emptyDetail' option in 'importOptions' correctly replaces an empty detail an empty string if no detail is provided
     // Secondary Focus:
     // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail', 'ruleId'.
     // other related properties in the review object reflect the correct values as per the given 'importOptions' and 'fieldSettings'.
@@ -982,7 +963,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-Pass-With-Comment.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-Pass-With-Comment.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1006,7 +987,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Test: emptyDetail = import
     // This test validates the behavior of the ckl parser function under the emptyDetail = import settings.
     // Primary Focus:
-    // - Ensuring that the 'autoStatus' option in 'importOptions' correctly uses the exisisitng detail if one is provided
+    // - Ensuring that the 'emptyDetail' option in 'importOptions' correctly uses the exisisitng detail if one is provided
     // Secondary Focus:
     // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail', 'ruleId'.
     // other related properties in the review object reflect the correct values as per the given 'importOptions' and 'fieldSettings'.
@@ -1033,7 +1014,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-Pass-With-Detail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-Pass-With-Detail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1056,7 +1037,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Test: emptyComment = replace
     // This test validates the behavior of the ckl parser function under the emptyComment = replace settings.
     // Primary Focus:
-    // - Ensuring that the 'autoStatus' option in 'importOptions' correctly replaces an empty comment with a static message. "There is no comment provided for the assessment"
+    // - Ensuring that the 'emptyComment' option in 'importOptions' correctly replaces an empty comment with a static message. "There is no comment provided for the assessment"
     // Secondary Focus:
     // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail', 'ruleId'.
     // other related properties in the review object reflect the correct values as per the given 'importOptions' and 'fieldSettings'.
@@ -1083,7 +1064,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-Pass-With-Detail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-Pass-With-Detail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1106,7 +1087,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Test: emptyComment = ignore
     // This test validates the behavior of the ckl parser function under the emptyComment = ignore settings.
     // Primary Focus:
-    // - Ensuring that the 'autoStatus' option in 'importOptions' correctly replaces an empty comment a null value
+    // - Ensuring that the 'emptyComment' option in 'importOptions' correctly replaces an empty comment a null value
     // Secondary Focus:
     // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail', 'ruleId'.
     // other related properties in the review object reflect the correct values as per the given 'importOptions' and 'fieldSettings'.
@@ -1133,7 +1114,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-Pass-With-Detail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-Pass-With-Detail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1154,7 +1135,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Test: emptyComment = import
     // This test validates the behavior of the ckl parser function under the emptyComment = import settings.
     // Primary Focus:
-    // - Ensuring that the 'autoStatus' option in 'importOptions' correctly replaces an empty comment an empty string: ""
+    // - Ensuring that the 'emptyComment' option in 'importOptions' correctly replaces an empty comment an empty string: ""
     // Secondary Focus:
     // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail', 'ruleId'.
     // other related properties in the review object reflect the correct values as per the given 'importOptions' and 'fieldSettings'.
@@ -1182,7 +1163,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-Pass-With-Detail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-Pass-With-Detail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1204,7 +1185,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     // Test: emptyComment = import
     // This test validates the behavior of the ckl parser function under the emptyComment = import settings.
     // Primary Focus:
-    // - Ensuring that the 'autoStatus' option in 'importOptions' correctly uses the exisisitng comment if one is provided
+    // - Ensuring that the 'emptyComment' option in 'importOptions' correctly uses the exisisitng comment if one is provided
     // Secondary Focus:
     // - Verifying the accuracy of other review properties including 'result', 'comment', and 'detail', 'ruleId'.
     // other related properties in the review object reflect the correct values as per the given 'importOptions' and 'fieldSettings'.
@@ -1231,7 +1212,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-Pass-With-Comment.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-Pass-With-Comment.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1252,7 +1233,7 @@ describe('Import Options, allowAccept for a review object in non multi-stig', ()
 })
 
 describe('fieldSettings testing for a review object in non multi-stig', () => {
-  it("autostatus = submitted, DEFAULT FIELD SETTINGS with allowAccept=true and a passing review, testing that it has a detail and is 'submitted'", async () => {
+  it("DEFAULT FIELD SETTINGS with allowAccept=true and a passing review, testing that it has a detail and is 'submitted'", async () => {
     // Test: autostatus = submitted, default field settings.
     // This test validates the behavior of the ckl parser function under the default field settings.
     // Primary Focus:
@@ -1284,7 +1265,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-Pass-With-Detail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-Pass-With-Detail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1304,7 +1285,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
     // expected status is submitted for the rule that has a detail
     expect(review.checklists[0].reviews[0]).to.include(expectedReview)
   })
-  it('autostatus = submitted, testing default field settings with allowAccept=true and a failing review with no detail.', async () => {
+  it('DEFAULT FIELD SETTINGS  with allowAccept=true and a failing review with no detail.', async () => {
     //autostatus = submitted, testing default field settings with allowAccept=true
     // This test validates the behavior of the ckl parser function under the default field setting with a fail and a no detail.
     // Primary Focus:
@@ -1337,7 +1318,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-fail-Empty-CommentDetail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-fail-Empty-CommentDetail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1356,7 +1337,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
 
     expect(review.checklists[0].reviews[0]).to.include(expectedReview)
   })
-  it('autostatus = submitted, fieldSettings.detail.required = findings with allowAccept=true with a failing review containing a detail', async () => {
+  it('fieldSettings.detail.required = findings with allowAccept=true with a failing review containing a detail', async () => {
     // Test: autostatus = submitted, default field settings.
     // This test validates the behavior of the ckl parser function under the  fieldSettings.detail.required = findings field settings.
     // Primary Focus:
@@ -1390,7 +1371,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-fail-With-Detail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-fail-With-Detail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1409,7 +1390,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
 
     expect(review.checklists[0].reviews[0]).to.include(expectedReview)
   })
-  it("autostatus = submitted, testing 'fieldSettings.detail.required = findings' with allowAccept=true with a fail and no detail or comment", async () => {
+  it("'fieldSettings.detail.required = findings' with allowAccept=true with a fail and no detail or comment", async () => {
     // Test: autostatus = submitted, testing 'fieldSettings.detail.required = findings' allowAccept=true
     // This test validates the behavior of the ckl parser function under the  fieldSettings.detail.required = findings field setting with a fail and no detail or comment.
     // Primary Focus:
@@ -1442,7 +1423,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-fail-Empty-CommentDetail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-fail-Empty-CommentDetail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1463,7 +1444,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
     expect(review.checklists[0].reviews[0]).to.include(expectedReview)
   })
 
-  it("autostatus = submitted, testing 'fieldSettings.detail.required = optional' with allowAccept=true with a fail and no detail or comment, testing that it does not have a detail and is submitted ", async () => {
+  it("'fieldSettings.detail.required = optional' with allowAccept=true with a fail and no detail or comment, testing that it does not have a detail and is submitted ", async () => {
     // TEST: autostatus = submitted, testing 'fieldSettings.detail.required = optional' with allowAccept=true
     // This test validates the behavior of the ckl parser function under the  fieldSettings.detail.required = optional field setting with a fail and no detail or comment.
     // Primary Focus:
@@ -1496,7 +1477,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-fail-Empty-CommentDetail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-fail-Empty-CommentDetail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1515,7 +1496,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
 
     expect(review.checklists[0].reviews[0]).to.include(expectedReview)
   })
-  it("autostatus = submitted, 'fieldSettings.detail.required = optional' with allowAccept=true with a fail and detail testing it has a detail and is submitted", async () => {
+  it("fieldSettings.detail.required = optional' with allowAccept=true with a fail and detail testing it has a detail and is submitted", async () => {
     // autostatus = submitted, 'fieldSettings.detail.required = optional' with allowAccept=true
     // This test validates the behavior of the ckl parser function under the  fieldSettings.detail.required = optional field setting with a fail and a detail.
     // Primary Focus:
@@ -1548,7 +1529,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-fail-With-Detail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-fail-With-Detail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1568,7 +1549,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
     expect(review.checklists[0].reviews[0]).to.include(expectedReview)
   })
 
-  it('autostatus = submitted, testing default field settings with allowAccept=true and a passing review testing that it has a comment and is submitted', async () => {
+  it('DEFAULT FIELD SETTINGS with allowAccept=true and a passing review testing that it has a comment and is submitted', async () => {
     //autostatus = submitted, testing default field settings with allowAccept=true
     // This test validates the behavior of the ckl parser function under the default field setting with a pass and a comment.
     // Primary Focus:
@@ -1601,7 +1582,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-Pass-With-Comment.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-Pass-With-Comment.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1620,7 +1601,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
 
     expect(review.checklists[0].reviews[0]).to.include(expectedReview)
   })
-  it('autostatus = submitted, testing default field settings with allowAccept=true and a failing review with no comment.', async () => {
+  it('DEFAULT FIELD SETTINGS  with allowAccept=true and a failing review with no comment.', async () => {
     //autostatus = submitted, testing default field settings with allowAccept=true
     // This test validates the behavior of the ckl parser function under the default field setting with a fail and a no comment.
     // Primary Focus:
@@ -1653,7 +1634,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-fail-Empty-CommentDetail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-fail-Empty-CommentDetail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1672,7 +1653,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
 
     expect(review.checklists[0].reviews[0]).to.include(expectedReview)
   })
-  it('autostatus = submitted, fieldSettings.comment.required = findings with allowAccept=true with a fail and comment testing that it has a comment and is submitted', async () => {
+  it('fieldSettings.comment.required = findings with allowAccept=true with a fail and comment testing that it has a comment and is submitted', async () => {
     // TEST: autostatus = submitted, fieldSettings.comment.required = findings with allowAccept=true
     // This test validates the behavior of the ckl parser function under the fieldSettings.comment.required = findings field setting with a fail and a comment.
     // Primary Focus:
@@ -1705,7 +1686,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-fail-with-Comment.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-fail-with-Comment.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1724,7 +1705,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
 
     expect(review.checklists[0].reviews[0]).to.include(expectedReview)
   })
-  it("autostatus = submitted, testing 'fieldSettings.comment.required = findings' with allowAccept=true with a fail and no detail or comment, testing that it does not have a comment and is 'saved' ", async () => {
+  it("'fieldSettings.comment.required = findings' with allowAccept=true with a fail and no detail or comment, testing that it does not have a comment and is 'saved' ", async () => {
     // TEST: autostatus = submitted, testing 'fieldSettings.comment.required = findings' with allowAccept=true
     // This test validates the behavior of the ckl parser function under the fieldSettings.comment.required = findings field setting with a fail and no comment.
     // Primary Focus:
@@ -1757,7 +1738,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-fail-Empty-CommentDetail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-fail-Empty-CommentDetail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1777,7 +1758,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
     expect(review.checklists[0].reviews[0]).to.include(expectedReview)
   })
 
-  it("autostatus = submitted, testing 'fieldSettings.comment.required = optional' with allowAccept=true with a fail and no detail or comment. testing that it doesnt have a comment and is submmited", async () => {
+  it("'fieldSettings.comment.required = optional' with allowAccept=true with a fail and no detail or comment. testing that it doesnt have a comment and is submmited", async () => {
     // TEST: autostatus = submitted, testing 'fieldSettings.comment.required = optional' with allowAccept=true
     // This test validates the behavior of the ckl parser function under the fieldSettings.comment.required = optional field setting with a fail and no comment or detail .
     // Primary Focus:
@@ -1810,7 +1791,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-fail-Empty-CommentDetail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-fail-Empty-CommentDetail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1829,7 +1810,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
 
     expect(review.checklists[0].reviews[0]).to.include(expectedReview)
   })
-  it("autostatus = submitted, 'fieldSettings.comment.required = optional' with allowAccept=true with a fail and comment, testing thhat it has a comment and is submitted", async () => {
+  it("fieldSettings.comment.required = optional' with allowAccept=true with a fail and comment, testing thhat it has a comment and is submitted", async () => {
     // TEST: autostatus = submitted, 'fieldSettings.comment.required = optional' with allowAccept=true
     // This test validates the behavior of the ckl parser function under the fieldSettings.comment.required = optional field setting with a fail and a comment.
     // Primary Focus:
@@ -1862,7 +1843,7 @@ describe('fieldSettings testing for a review object in non multi-stig', () => {
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-fail-with-Comment.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-fail-with-Comment.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1918,7 +1899,7 @@ describe('Tests where fieldSettings and importOptions overlap. ', () => {
     const allowAccept = true
 
     const filePath =
-      './WATCHER-test-files/WATCHER/Single-Vuln-notReviewed-Empty-CommentDetail.ckl'
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-notReviewed-Empty-CommentDetail.ckl'
 
     const review = await generateReviewObject(
       filePath,
@@ -1931,6 +1912,52 @@ describe('Tests where fieldSettings and importOptions overlap. ', () => {
 
     expect(review.checklists[0].reviews).to.be.empty
 
+  })
+
+})
+
+
+describe('MISC. ', () => {
+  it("Testing that long comment.detail is truncated ", async () => {
+    // NOTE: the input comment and detail are '32768' characters long
+    
+    const importOptions = {
+      autoStatus: 'submitted',
+      unreviewed: 'commented',
+      unreviewedCommented: 'informational',
+      emptyDetail: 'ignore',
+      emptyComment: 'ignore',
+      allowCustom: true
+    }
+
+    const fieldSettings = {
+      detail: {
+        enabled: 'findings', // not used
+        required: 'always'
+      },
+      comment: {
+        enabled: 'always', // not used
+        required: 'always'
+      }
+    }
+
+    const allowAccept = true
+
+    const filePath =
+      './WATCHER-test-files/WATCHER/ckl/Single-Vuln-Long-CommentDetail.ckl'
+
+    const review = await generateReviewObject(
+      filePath,
+      importOptions,
+      fieldSettings,
+      allowAccept
+    )
+    
+    const maxLength = 32767
+
+    expect(review.checklists[0].reviews[0].detail).to.have.lengthOf(maxLength)
+    expect(review.checklists[0].reviews[0].comment).to.have.lengthOf(maxLength)
+  
   })
 
 })
