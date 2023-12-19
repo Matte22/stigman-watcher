@@ -12,22 +12,6 @@
   "engines": {
     "node": ">=14"
   },
-  "scripts": {
-    "test": "nyc mocha"
-  },
-  "nyc": {
-    "reporter": [
-      "lcov",
-      "text-summary"
-    ],
-    "include": [
-      "lib/**/*.js"
-    ],
-    "exclude": [
-      "test/**/*.js"
-    ],
-    "all": true
-  },
   "dependencies": {
     "atob": "^2.1.2",
     "better-queue": "^3.8.10",
@@ -44,10 +28,5 @@
     "semver": "^7.3.5",
     "serialize-error": "^8.0.1",
     "winston": "^3.3.3"
-  },
-  "devDependencies": {
-    "chai": "^4.3.10",
-    "mocha": "^10.2.0",
-    "nyc": "^15.1.0"
   }
 }
