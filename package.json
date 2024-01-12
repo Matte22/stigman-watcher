@@ -6,6 +6,10 @@
   "bin": {
     "stigman-watcher": "./index.js"
   },
+  "scripts": {
+    "test": "mocha './tests/**/*.test.js'",
+    "test:watch": "nodemon --exec 'npm test'"
+  },
   "author": "carl.a.smigielski@saic.com",
   "license": "MIT",
   "repository": "github:nuwcdivnpt/stigman-watcher",
@@ -28,5 +32,12 @@
     "semver": "^7.3.5",
     "serialize-error": "^8.0.1",
     "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "chai": "^5.0.0",
+    "mocha": "^10.2.0",
+    "nodemon": "^3.0.2",
+    "proxyquire": "^2.1.3",
+    "sinon": "^17.0.1"
   }
 }
