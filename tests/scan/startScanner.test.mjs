@@ -5,8 +5,7 @@ import path from 'path'
 import {
   startScanner,
   scheduleNextScan,
-  setUpHistory,
-  readHistoryFile
+  setUpHistory
 } from '../../lib/scan.js'
 
 const writeFile = (file, data) =>
@@ -116,12 +115,12 @@ describe('startScanner history file testing', function () {
     }
     const context = setUpHistory(config)
 
-    const startingHistoryContent = fs.readFileSync(mockHistoryFilePath, 'utf-8')
+     const startingHistoryContent = fs.readFileSync(mockHistoryFilePath, 'utf-8')
 
     await startScanner(context)
 
     const historyContent = fs.readFileSync(mockHistoryFilePath, 'utf-8')
-    console.log('ending', historyContent)
+   
 
     const expectedHistoryContent =
       mockFiles.map(file => path.join(mockDirPath, file)).join('\n') + '\n'
@@ -177,11 +176,69 @@ describe('startScanner history file testing', function () {
 
     const context = setUpHistory(config)
 
-    const startingHistoryContent = fs.readFileSync(mockHistoryFilePath, 'utf-8')
+  //  const startingHistoryContent = fs.readFileSync(mockHistoryFilePath, 'utf-8')
 
     await startScanner(context)
 
     const historyContent = fs.readFileSync(mockHistoryFilePath, 'utf-8')
+
+    const expectedHistoryContent =
+      mockFiles.map(file => path.join(mockDirPath, file)).join('\n') + '\n'
+
+    expect(historyContent).to.equal(expectedHistoryContent)
+  })
+})
+describe('startScanner history file testing', function () {
+  const mockDirPath = path.join(process.cwd(), 'mock-directory')
+  const historyDirPath = path.join(process.cwd(), 'history-directory') // Separate directory for history
+  const mockFiles = ['History1.ckl', 'mock2.xml', 'mock3.cklb', 'mock4.ckl', 'mock5.ckl']
+  const mockHistoryFilePath = path.join(historyDirPath, 'history.txt')
+  const initialHistoryContent =
+    process.cwd() +
+    '/mock-directory/History1.ckl\n' +
+    process.cwd() +
+    '/mock-directory/mock2.xml\n' +
+    process.cwd() +
+    '/mock-directory/mock3.cklb\n'
+
+  beforeEach(async () => {
+    await setUpMockEnvironment(
+      mockDirPath,
+      historyDirPath,
+      mockFiles,
+      mockHistoryFilePath,
+      initialHistoryContent
+    )
+  })
+
+  afterEach(async () => {
+    await tearDownMockEnvironment(
+      mockDirPath,
+      historyDirPath,
+      mockFiles,
+      mockHistoryFilePath
+    )
+  })
+
+  it('same contents in scanned directory aswell as history file.', async function () {
+    const config = {
+      historyFile: mockHistoryFilePath,
+      path: mockDirPath,
+      scanInterval: 10000,
+      oneShot: true
+    }
+
+    const context = setUpHistory(config)
+
+   const startingHistoryContent = fs.readFileSync(mockHistoryFilePath, 'utf-8')
+
+   console.log( "starting",startingHistoryContent)
+
+    await startScanner(context)
+
+    const historyContent = fs.readFileSync(mockHistoryFilePath, 'utf-8')
+
+    console.log("ending",historyContent)
 
     const expectedHistoryContent =
       mockFiles.map(file => path.join(mockDirPath, file)).join('\n') + '\n'
