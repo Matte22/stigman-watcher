@@ -28,8 +28,10 @@ async function run() {
       watcher.startFsEventWatcher()
     }
     else if (config.mode === 'scan') {
-      const scanner = require('./lib/scan')
-      scanner.startScanner()
+  
+      const { startScanner , setUpHistory } = require('./lib/scan')
+      setUpHistory(config)
+      startScanner(config)
     }
   }
   catch (e) {
