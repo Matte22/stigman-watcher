@@ -1,14 +1,21 @@
 import { expect } from 'chai'
 import sinon from 'sinon'
 import fs from 'fs'
-import startScanner, {
+import {
+  startScanner,
   initHistory,
   addToHistory,
-  removeFromHistory,
-  setHistory
+  removeFromHistory
 } from '../../lib/scan.js'
 import { logger } from '../../lib/logger.js'
 import path from 'path'
+import { options } from '../../lib/args.js'
+
+function setOptions(o) {
+  for (const [key, value] of Object.entries(o)) {
+    options[key] = value
+  }
+}
 
 describe('testing add/remove/init functions  ', function () {
   const historyFile = './watcher.test.history'
@@ -27,30 +34,30 @@ describe('testing add/remove/init functions  ', function () {
   })
 
   it('should correctly create an empty history file', async function () {
-    const options = {
+    setOptions({
       historyFile: historyFile,
       path: scannedPath,
       scanInterval: 15000,
       oneShot: true,
       historyWriteInterval: 10
-    }
+    })
 
-    initHistory(options)
+    initHistory()
 
     expect(fs.existsSync(historyFile)).to.be.true
     expect(fs.readFileSync(historyFile, 'utf8')).to.equal('')
   })
 
   it('should correctly add to history file', async function () {
-    const options = {
+    setOptions({
       historyFile: historyFile,
       path: scannedPath,
       scanInterval: 5000,
       oneShot: true,
       historyWriteInterval: 10
-    }
+    })
 
-    initHistory(options)
+    initHistory()
 
     const file = './test/testFiles/file1.ckl'
 
@@ -103,7 +110,6 @@ describe('testing starting with empty history file and adding entries', function
 
   beforeEach(function () {
     fs.writeFileSync(historyFile, '')
-    setHistory(new Set())
 
     fs.mkdirSync(scannedPath, { recursive: true })
     for (let i = 1; i <= 5; i++) {
@@ -128,19 +134,19 @@ describe('testing starting with empty history file and adding entries', function
   })
 
   it('should correctly identify the 5 new files and update the history file with all 5', async function () {
-    const options = {
+    setOptions({
       historyFile: historyFile,
       path: scannedPath,
       scanInterval: 5000,
       oneShot: true,
       historyWriteInterval: 10
-    }
+    })
 
     // create history file
-    initHistory(options)
+    initHistory()
 
     // start scanning
-    await startScanner(options)
+    await startScanner()
 
     await new Promise(resolve =>
       setTimeout(resolve, options.historyWriteInterval)
@@ -178,7 +184,6 @@ describe('testing starting with entries in history file that are also in the sca
       historyFile,
       './test/testFiles/TestScannedDirectory/file1.ckl\n./test/testFiles/TestScannedDirectory/file2.ckl\n'
     )
-    setHistory(new Set())
 
     fs.mkdirSync(scannedPath, { recursive: true })
     for (let i = 1; i <= 5; i++) {
@@ -203,19 +208,19 @@ describe('testing starting with entries in history file that are also in the sca
   })
 
   it('should correctly return the two files previously in the history file aswell as the other three in the scanned directory.', async function () {
-    const options = {
+    setOptions({
       historyFile: historyFile,
       path: scannedPath,
       scanInterval: 5000,
       oneShot: true,
       historyWriteInterval: 10
-    }
+    })
 
     // create history file
-    initHistory(options)
+    initHistory()
 
     // start scanning
-    await startScanner(options)
+    await startScanner()
 
     await new Promise(resolve =>
       setTimeout(resolve, options.historyWriteInterval)
@@ -253,7 +258,6 @@ describe('testing starting with entries in history file that are NOT in the scan
       historyFile,
       './test/testFiles//file55.ckl\n./test/testFiles//file22.ckl\n'
     )
-    setHistory(new Set())
 
     fs.mkdirSync(scannedPath, { recursive: true })
     for (let i = 1; i <= 5; i++) {
@@ -276,19 +280,19 @@ describe('testing starting with entries in history file that are NOT in the scan
   })
 
   it('should correctly remove the 2 files history file then write the 5 in the scanned directory.', async function () {
-    const options = {
+    setOptions({
       historyFile: historyFile,
       path: scannedPath,
       scanInterval: 5000,
       oneShot: true,
       historyWriteInterval: 10
-    }
+    })
 
     // create history file
-    initHistory(options)
+    initHistory()
 
     // start scanning
-    await startScanner(options)
+    await startScanner()
 
     await new Promise(resolve =>
       setTimeout(resolve, options.historyWriteInterval)
@@ -326,7 +330,6 @@ describe('testing starting with entries in history file that are not in the scan
       historyFile,
       './test/testFiles/TestScannedDirectory/file55.ckl\n./test/testFiles/TestScannedDirectory/file22.ckl\n\n./test/testFiles/TestScannedDirectory/file1.ckl\n./test/testFiles/TestScannedDirectory/file2.ckl\n'
     )
-    setHistory(new Set())
 
     fs.mkdirSync(scannedPath, { recursive: true })
     for (let i = 1; i <= 5; i++) {
@@ -349,19 +352,19 @@ describe('testing starting with entries in history file that are not in the scan
   })
 
   it('should correctly remove the 2 files history file skip 2 files already in the history file and scanned directory and add one file to the history file', async function () {
-    const options = {
+    setOptions({
       historyFile: historyFile,
       path: scannedPath,
       scanInterval: 5000,
       oneShot: true,
       historyWriteInterval: 50
-    }
+    })
 
     // create history file
-    initHistory(options)
+    initHistory()
 
     // start scanning
-    await startScanner(options)
+    await startScanner()
 
     await new Promise(resolve =>
       setTimeout(resolve, options.historyWriteInterval)
@@ -397,7 +400,6 @@ describe('testing starting with empty history file and slowly adding and removin
     fs.writeFileSync(historyFile, '')
     logStub = sinon.stub(logger, 'info')
     warnStub = sinon.stub(logger, 'warn')
-    setHistory(new Set())
   })
 
   afterEach(function () {
@@ -407,16 +409,16 @@ describe('testing starting with empty history file and slowly adding and removin
   })
 
   it('should correctly remove the 2 files history file skip 2 files already in the history file and scanned directory and add one file to the history file', async function () {
-    const options = {
+    setOptions({
       historyFile: historyFile,
       path: scannedPath,
       scanInterval: 5000,
       oneShot: true,
       historyWriteInterval: 50
-    }
+    })
 
     // create history file
-    initHistory(options)
+    initHistory()
 
     addToHistory('./test/testFiles/file1.ckl')
     addToHistory('./test/testFiles/file2.ckl')
@@ -457,7 +459,6 @@ describe('testing no history file mode', function () {
   beforeEach(function () {
     logStub = sinon.stub(logger, 'info')
     warnStub = sinon.stub(logger, 'warn')
-    setHistory(new Set())
   })
 
   afterEach(function () {
@@ -466,15 +467,15 @@ describe('testing no history file mode', function () {
   })
 
   it('should correctly run in no history file mode', async function () {
-    const options = {
+    setOptions({
       historyFile: historyFile,
       path: scannedPath,
       scanInterval: 5000,
       oneShot: true,
       historyWriteInterval: 10
-    }
+    })
 
-    initHistory(options)
+    initHistory()
 
     const file = './test/testFiles/file1.ckl'
 
