@@ -27,7 +27,7 @@ jobs:
       - name: Import GPG Key
         id: import_gpg
         run: | 
-          if ! echo "${{ secrets.WATCHER_PRIVATE_KEY }}" | gpg--import; then
+          if ! echo "${{ secrets.WATCHER_PRIVATE_KEY }}" | gpg --import; then
             echo "::warning ::Private key GPG Import failed"
             exit 1
           fi
@@ -43,15 +43,15 @@ jobs:
       - name: Sign Artifacts
         id: sign_artifacts
         run: |
-         if ! gpg --default-key nuwcdivnpt-bot@users.noreply.github.com --armor --detach-sig ./dist/stigman-watcher-linux-${{ env.PACKAGE_VERSION }}.tar.gz; then
+         if ! gpg--default-key nuwcdivnpt-bot@users.noreply.github.com --armor --detach-sig ./dist/stigman-watcher-linux-${{ env.PACKAGE_VERSION }}.tar.gz; then
             echo "::warning ::Linux Signing failed"
             exit 1
           fi
-         if ! gpg --default-key nuwcdivnpt-bot@users.noreply.github.com --armor --detach-sig ./dist/stigman-watcher-win-${{ env.PACKAGE_VERSION }}.zip; then
+         if ! gpg--default-key nuwcdivnpt-bot@users.noreply.github.com --armor --detach-sig ./dist/stigman-watcher-win-${{ env.PACKAGE_VERSION }}.zip; then
             echo "::warning ::Windows Signing failed"
             exit 1
          fi
-    
+      
       - name: Verify Signatures
         id: verify_signatures
         working-directory: ./dist
