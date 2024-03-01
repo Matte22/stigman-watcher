@@ -27,7 +27,7 @@ jobs:
       - name: Import GPG Key
         id: import_gpg
         run: | 
-          if ! echo "${{ secrets.WATCHER_PRIVATE_KEY }}" | gpg--import; then
+          if ! echo "${{ secrets.WATCHER_PRIVATE_KEY }}" | gpg --import; then
             echo "::warning ::Private key GPG Import failed"
             exit 1
           fi
