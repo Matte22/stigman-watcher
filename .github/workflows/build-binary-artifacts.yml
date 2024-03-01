@@ -21,7 +21,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v3
         with:
-          ref: main
+          ref: build-workflow-pr
           fetch-depth: 0
 
       - name: Import GPG Key
