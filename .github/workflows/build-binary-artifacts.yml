@@ -24,6 +24,10 @@ jobs:
           ref: build-workflow-pr
           fetch-depth: 0
 
+      - name: run build script
+        id: run_build_script
+        run: ./build.sh
+
       - name: Import GPG Key
         id: import_gpg
         run: | 
@@ -32,10 +36,6 @@ jobs:
             exit 1
           fi
       
-      - name: run build script
-        id: run_build_script
-        run: ./build.sh
-
       - name: Get version from package.json
         id: package_version
         run: echo "PACKAGE_VERSION=$(jq -r '.version' package.json)" >> $GITHUB_ENV
@@ -43,11 +43,11 @@ jobs:
       - name: Sign Artifacts
         id: sign_artifacts
         run: |
-         if ! gpg--default-key nuwcdivnpt-bot@users.noreply.github.com --armor --detach-sig ./dist/stigman-watcher-linux-${{ env.PACKAGE_VERSION }}.tar.gz; then
+         if ! gpg --default-key nuwcdivnpt-bot@users.noreply.github.com --armor --detach-sig ./dist/stigman-watcher-linux-${{ env.PACKAGE_VERSION }}.tar.gz; then
             echo "::warning ::Linux Signing failed"
             exit 1
           fi
-         if ! gpg--default-key nuwcdivnpt-bot@users.noreply.github.com --armor --detach-sig ./dist/stigman-watcher-win-${{ env.PACKAGE_VERSION }}.zip; then
+         if ! gpg --default-key nuwcdivnpt-bot@users.noreply.github.com --armor --detach-sig ./dist/stigman-watcher-win-${{ env.PACKAGE_VERSION }}.zip; then
             echo "::warning ::Windows Signing failed"
             exit 1
          fi
