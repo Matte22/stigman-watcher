@@ -24,13 +24,13 @@ jobs:
           ref: build-workflow-pr
           fetch-depth: 0
 
-      # - name: Import GPG Key
-      #   id: import_gpg
-      #   run: | 
-      #     if ! echo "${{ secrets.WATCHER_PRIVATE_KEY }}" | gpg --import; then
-      #       echo "::warning ::Private key GPG Import failed"
-      #       exit 1
-      #     fi
+      - name: Import GPG Key
+        id: import_gpg
+        run: | 
+          if ! echo "${{ secrets.WATCHER_PRIVATE_KEY }}" | gpg --import; then
+            echo "::warning ::Private key GPG Import failed"
+            exit 1
+          fi
       
       - name: run build script
         id: run_build_script
@@ -52,13 +52,13 @@ jobs:
             exit 1
          fi
       
-      - name: Import GPG Public Key
-        id: import_gpg_public
-        run: |
-          if ! gpg --import ./nuwcdivnpt-bot.gpg.asc; then
-            echo "::warning ::Public Key Import failed"
-            exit 1
-          fi
+      # - name: Import GPG Public Key
+      #   id: import_gpg_public
+      #   run: |
+      #     if ! gpg --import ./nuwcdivnpt-bot.gpg.asc; then
+      #       echo "::warning ::Public Key Import failed"
+      #       exit 1
+      #     fi
     
       - name: Verify Signatures
         id: verify_signatures
