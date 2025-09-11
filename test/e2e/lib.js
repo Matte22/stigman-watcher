@@ -1,10 +1,11 @@
-import path, { resolve, dirname } from 'node:path'
+import path, { resolve, dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { spawn, execSync } from 'node:child_process'
 import EventEmitter from 'node:events'
 import * as readline from 'node:readline'
 import MockOidc from './mockOidc.js'
 import fs from 'fs'
+import { readFile, writeFile} from 'node:fs/promises';
 import {
   GenericContainer,
   Wait,
@@ -463,4 +464,66 @@ export async function clearHistoryFileContents(historyFilePath) {
     console.error('Error clearing history file:', err)
     throw err
   }
+}
+
+/**
+ * Copy a CKL file and replace the host name.
+ * @param {string} templatePath
+ * @param {string} outputPath
+ * @param {string} newHostName
+ */
+export async function createCkl(templatePath, outputPath, newHostName) {
+  let xml = await readFile(templatePath, 'utf8');
+  xml = xml.replace(/<HOST_NAME>.*?<\/HOST_NAME>/is, `<HOST_NAME>${newHostName}</HOST_NAME>`);
+  await writeFile(outputPath, xml, 'utf8');
+}
+
+export async function clearDirectory(directoryPath) {
+  try {
+    const files = await fs.promises.readdir(directoryPath);
+    for (const file of files) {
+      const filePath = path.join(directoryPath, file);
+      const stat = await fs.promises.lstat(filePath);
+      if (stat.isDirectory()) {
+        await clearDirectory(filePath); // Recursively clear subdirectory
+        await fs.promises.rmdir(filePath); // Remove the empty directory
+      } else {
+        await fs.promises.unlink(filePath); // Remove file
+      }
+    }
+  } catch (err) {
+    console.error('Error clearing directory:', err);
+    throw err;
+  }
+}
+
+export async function uploadTestStig (filename) {
+  const __filename = fileURLToPath(import.meta.url)
+  const __dirname = dirname(__filename)
+  const filePath = join(__dirname, `${filename}`)
+  
+  const fileContent = fs.readFileSync(filePath, 'utf-8')
+  
+  // Create a Blob for the file content
+  const blob = new Blob([fileContent], { type: 'text/xml' })
+
+  const formData = new FormData()
+  formData.append('importFile', blob, filename)
+
+ const username = "stigmanadmin"
+  const response = await fetch(`http://${apiHost}:${apiPort}/api/stigs?elevate=true&clobber=true`, {
+    method: 'POST',
+    headers: {
+       Authorization: `Bearer ${auth.getToken({username, privileges:['create_collection', 'admin']})}`,
+    },
+    body: formData,
+  })
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`)
+  }
+
+  const data = await response.json()
+  return data
 }
