@@ -1553,14 +1553,25 @@ describe("Event Mode, stop api and go api offline, come back up, then take api b
   it("stops the api service", async () => {
     // ensure watcher finished start/preflight and is running
     await waitFor(() => watcher.logRecords.some(r => r.message === 'running'), 20000)
-    //api.stop()
-    // drop a CKL so the watcher will attempt API operations and observe failures
-    // await fs.promises.mkdir(dropEnv.path, { recursive: true })
-    // await createCkl(BASE_CKL_PATH, `${dropEnv.path}/trigger-api-failure.ckl`, 'trigger-api-failure')
-    // await waitFor(() => watcher.logRecords.some(r => r.component === 'scan' && r.message === 'file system event' && r.file && r.file.endsWith('trigger-api-failure.ckl')), 20000)
-
-    // stop the api service so the watcher will see failures
+    
+    // drop 5 ckls into the scrapFiles folder to trigger api calls
+    for (let i = 1; i <= 5; i++) {
+      try {
+        await createCkl(BASE_CKL_PATH, `${dropEnv.path}/api-offline${i}.ckl`, `api-offline${i}`)
+      } catch (e) {}
+    }
+    // wait for the first file to be detected
+    await waitFor(() => watcher.logRecords.some(r => r.message === 'preflight api requests succeeded'), 20000)
+    // stop the mock api server so the watcher will see api failures
     api.stop()
+    
+    // wait for a while to allow retries and alarm to be logged
+    await waitFor(() => watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm raised: apiOffline'), 2002000)
+    expect(watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm raised: apiOffline')).to.be.true
+
+  
+    
+
   })
  
 
