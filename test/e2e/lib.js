@@ -5,7 +5,7 @@ import EventEmitter from 'node:events'
 import * as readline from 'node:readline'
 import MockOidc from './mockOidc.js'
 import fs from 'fs'
-import { readFile, writeFile} from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises'
 import {
   GenericContainer,
   Wait,
@@ -18,7 +18,7 @@ const nodeCmd = process.env.GITHUB_RUN_ID
   : process.execPath
 const AUTH_PORT = 8080
 let apiHost, apiPort
-let dbPort 
+let dbPort
 let net
 let auth
 
@@ -75,10 +75,14 @@ export async function runWatcherPromise ({
       `${env.historyWriteInterval}`,
       '--history-file',
       env.historyFile,
-       `${env.logLevel ? '--log-level' : ''}`,
+      `${env.logLevel ? '--log-level' : ''}`,
       `${env.logLevel ? env.logLevel : ''}`,
-      '--scan-interval',
-      `${env.scanInterval}`,
+      `${env.noCreateObjects ? '--no-create-objects' : ''}`,
+      `${env.scanInterval ? '--scan-interval' : ''}`,
+      `${env.scanInterval ? env.scanInterval : ''}`,
+      `${env.noIgnoreDot ? '--no-ignore-dot' : ''}`,
+      `${env.ignoreGlob ? '--ignore-glob' : ''}`,
+      ...(env.ignoreGlob ? env.ignoreGlob : []),
       '--cargo-delay',
       `${env.cargoDelay}`,
       '--cargo-size',
@@ -92,6 +96,7 @@ export async function runWatcherPromise ({
     })
 
     watcher.on('error', err => {
+      console.error('Error starting watcher process:', err)
       reject(err)
     })
 
@@ -167,12 +172,16 @@ export async function runWatcher ({
       `${env.historyWriteInterval}`,
       '--history-file',
       env.historyFile,
-      '--scan-interval',
-      `${env.scanInterval}`,
+      `${env.ignoreGlob ? '--ignore-glob' : ''}`,
+      ...(env.ignoreGlob ? env.ignoreGlob : []),
+      `${env.noIgnoreDot ? '--no-ignore-dot' : ''}`,
+      `${env.scanIntervall ? '--scan-interval' : ''}`,
+      `${env.scanIntervall ? env.scanInterval : ''}`,
       `${env.logLevel ? '--log-level' : ''}`,
       `${env.logLevel ? env.logLevel : ''}`,
       '--cargo-delay',
       `${env.cargoDelay}`,
+      `${env.noCreateObjects ? '--no-create-objects' : ''}`,
       '--cargo-size',
       `${env.cargoSize}`,
       ...(env.addExisting ? ['--add-existing'] : [])
@@ -258,7 +267,7 @@ export async function startDb () {
       ).withStartupTimeout(120_000)
     )
     .start()
-    return db
+  return db
 }
 
 export async function startAuth () {
@@ -289,9 +298,9 @@ export async function startApi () {
       ).withStartupTimeout(120_000)
     )
     .start()
-    apiHost = api.getHost()
-    apiPort = api.getMappedPort(54000)
-    return api
+  apiHost = api.getHost()
+  apiPort = api.getMappedPort(54000)
+  return api
 }
 
 /**
@@ -320,22 +329,27 @@ export async function stopProcesses (processNames) {
   if (net) await net.stop()
 }
 
-export async function createWatcherUser() {
-
-  const username = "stigmanadmin"
+export async function createWatcherUser () {
+  const username = 'stigmanadmin'
   const post = {
     collectionGrants: [],
     userGroups: [],
     username: 'stigman-watcher'
   }
-  const res = await fetch(`http://${apiHost}:${apiPort}/api/users?elevate=true`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${auth.getToken({username, privileges:['create_collection', 'admin']})}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(post)
-  })
+  const res = await fetch(
+    `http://${apiHost}:${apiPort}/api/users?elevate=true`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${auth.getToken({
+          username,
+          privileges: ['create_collection', 'admin']
+        })}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(post)
+    }
+  )
   if (!res.ok) {
     const text = await res.text()
     throw new Error(`HTTP error, Status: ${res.status}`)
@@ -343,7 +357,7 @@ export async function createWatcherUser() {
   return res.json()
 }
 
-export async function createCollection(collectionPost, userId) {
+export async function createCollection (collectionPost, userId) {
   // if no collecitonPost is passed in, use the default
   if (!collectionPost) {
     collectionPost = {
@@ -387,9 +401,7 @@ export async function createCollection(collectionPost, userId) {
         pocPhone: '12342',
         reqRar: 'true'
       },
-      grants: [
-        userId ? { roleId: 4, userId } : undefined
-      ],
+      grants: [userId ? { roleId: 4, userId } : undefined],
       labels: [
         {
           name: 'TEST',
@@ -400,13 +412,16 @@ export async function createCollection(collectionPost, userId) {
     }
   }
 
-  const username = "stigmanadmin"
+  const username = 'stigmanadmin'
   const res = await fetch(
     `http://${apiHost}:${apiPort}/api/collections?elevate=true&projection=grants&projection=labels`,
     {
       method: 'POST',
       headers: {
-         Authorization: `Bearer ${auth.getToken({username, privileges:['create_collection', 'admin']})}`,
+        Authorization: `Bearer ${auth.getToken({
+          username,
+          privileges: ['create_collection', 'admin']
+        })}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(collectionPost)
@@ -420,7 +435,6 @@ export async function createCollection(collectionPost, userId) {
 }
 
 export async function initWatcherTestCollection () {
-
   const user = await createWatcherUser()
   const collection = await createCollection(null, user.userId)
   return { user, collection }
@@ -434,7 +448,7 @@ export async function initWatcherTestCollection () {
  * @param {number} intervalMs - how often to poll.
  * @returns {Promise<void>} resolves when condition is true, rejects on timeout.
  */
-export async function waitFor(conditionFn, timeoutMs = 5000, intervalMs = 100) {
+export async function waitFor (conditionFn, timeoutMs = 5000, intervalMs = 100) {
   const start = Date.now()
 
   return new Promise((resolve, reject) => {
@@ -455,9 +469,9 @@ export async function waitFor(conditionFn, timeoutMs = 5000, intervalMs = 100) {
   })
 }
 
-export async function clearHistoryFileContents(historyFilePath) {
+export async function clearHistoryFileContents (historyFilePath) {
   try {
-    const pathToFile = resolve(historyFilePath) 
+    const pathToFile = resolve(historyFilePath)
     fs.writeFileSync(pathToFile, '', 'utf8')
     return
   } catch (err) {
@@ -472,28 +486,31 @@ export async function clearHistoryFileContents(historyFilePath) {
  * @param {string} outputPath
  * @param {string} newHostName
  */
-export async function createCkl(templatePath, outputPath, newHostName) {
-  let xml = await readFile(templatePath, 'utf8');
-  xml = xml.replace(/<HOST_NAME>.*?<\/HOST_NAME>/is, `<HOST_NAME>${newHostName}</HOST_NAME>`);
-  await writeFile(outputPath, xml, 'utf8');
+export async function createCkl (templatePath, outputPath, newHostName) {
+  let xml = await readFile(templatePath, 'utf8')
+  xml = xml.replace(
+    /<HOST_NAME>.*?<\/HOST_NAME>/is,
+    `<HOST_NAME>${newHostName}</HOST_NAME>`
+  )
+  await writeFile(outputPath, xml, 'utf8')
 }
 
-export async function clearDirectory(directoryPath) {
+export async function clearDirectory (directoryPath) {
   try {
-    const files = await fs.promises.readdir(directoryPath);
+    const files = await fs.promises.readdir(directoryPath)
     for (const file of files) {
-      const filePath = path.join(directoryPath, file);
-      const stat = await fs.promises.lstat(filePath);
+      const filePath = path.join(directoryPath, file)
+      const stat = await fs.promises.lstat(filePath)
       if (stat.isDirectory()) {
-        await clearDirectory(filePath); // Recursively clear subdirectory
-        await fs.promises.rmdir(filePath); // Remove the empty directory
+        await clearDirectory(filePath) // Recursively clear subdirectory
+        await fs.promises.rmdir(filePath) // Remove the empty directory
       } else {
-        await fs.promises.unlink(filePath); // Remove file
+        await fs.promises.unlink(filePath) // Remove file
       }
     }
   } catch (err) {
-    console.error('Error clearing directory:', err);
-    throw err;
+    console.error('Error clearing directory:', err)
+    throw err
   }
 }
 
@@ -501,29 +518,86 @@ export async function uploadTestStig (filename) {
   const __filename = fileURLToPath(import.meta.url)
   const __dirname = dirname(__filename)
   const filePath = join(__dirname, `${filename}`)
-  
+
   const fileContent = fs.readFileSync(filePath, 'utf-8')
-  
+
   // Create a Blob for the file content
   const blob = new Blob([fileContent], { type: 'text/xml' })
 
   const formData = new FormData()
-  formData.append('importFile', blob, filename)
+  formData.append('importFile', blob, filePath)
 
- const username = "stigmanadmin"
-  const response = await fetch(`http://${apiHost}:${apiPort}/api/stigs?elevate=true&clobber=true`, {
-    method: 'POST',
-    headers: {
-       Authorization: `Bearer ${auth.getToken({username, privileges:['create_collection', 'admin']})}`,
-    },
-    body: formData,
-  })
+  const username = 'stigmanadmin'
+  const response = await fetch(
+    `http://${apiHost}:${apiPort}/api/stigs?elevate=true&clobber=true`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${auth.getToken({
+          username,
+          privileges: ['create_collection', 'admin']
+        })}`
+      },
+      body: formData
+    }
+  )
 
   if (!response.ok) {
     const errorText = await response.text()
-    throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`)
+    throw new Error(
+      `HTTP error! Status: ${response.status}, Message: ${errorText}`
+    )
   }
 
   const data = await response.json()
   return data
+}
+
+export async function writeToHistoryFile (historyFilePath, entries) {
+  try {
+    const pathToFile = resolve(historyFilePath)
+    const data = entries.join('\n') + '\n'
+    fs.appendFileSync(pathToFile, data, 'utf8')
+    return
+  } catch (err) {
+    console.error('Error writing to history file:', err)
+    throw err
+  }
+}
+
+
+export async function createAsset (assetPost, collectionId) {
+  // if no assetPost is passed in, use the default
+  if (!assetPost) {
+    assetPost = {
+      collectionId: collectionId,
+      description: 'string',
+      fqdn: 'string',
+      ip: 'string',
+      labelNames: [],
+      mac: 'string',
+      metadata: {},
+      name: 'test',
+      noncomputing: true,
+      stigs: []
+    }
+  }
+
+  const username = 'stigman-watcher'
+  const res = await fetch(`http://${apiHost}:${apiPort}/api/assets`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${auth.getToken({
+        username,
+        privileges: ['create_collection', 'admin']
+      })}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(assetPost)
+  })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`HTTP error, Status: ${res.status}`)
+  }
+  return res.json()
 }
