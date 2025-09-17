@@ -1,6 +1,6 @@
 {
   "name": "@nuwcdivnpt/stigman-watcher",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "CLI that watches a path for STIG test result files on behalf of a STIG Manager Collection.",
   "main": "index.js",
   "type": "module",
@@ -25,12 +25,11 @@
     "chokidar": "^3.5.1",
     "commander": "^7.2.0",
     "dotenv": "^8.2.0",
-    "fast-glob": "^3.3.2",
+    "fast-glob": "3.3.3",
     "got": "^11.8.2",
     "jsonwebtoken": "^9.0.0",
     "n-readlines": "^1.0.1",
     "prompt-sync": "4.1.6",
-    "semver": "^7.3.5",
     "serialize-error": "^8.0.1",
     "winston": "^3.3.3"
   },
