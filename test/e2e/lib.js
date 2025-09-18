@@ -177,8 +177,8 @@ export async function runWatcher ({
       `${env.ignoreGlob ? '--ignore-glob' : ''}`,
       ...(env.ignoreGlob ? env.ignoreGlob : []),
       `${env.noIgnoreDot ? '--no-ignore-dot' : ''}`,
-      `${env.scanIntervall ? '--scan-interval' : ''}`,
-      `${env.scanIntervall ? env.scanInterval : ''}`,
+      `${env.scanInterval ? '--scan-interval' : ''}`,
+      `${env.scanInterval ? env.scanInterval : ''}`,
       `${env.logLevel ? '--log-level' : ''}`,
       `${env.logLevel ? env.logLevel : ''}`,
       '--cargo-delay',
@@ -516,6 +516,11 @@ export async function clearDirectory (directoryPath) {
   try {
     const files = await fs.promises.readdir(directoryPath)
     for (const file of files) {
+      // Skip .gitkeep files to preserve Git tracking
+      if (file === '.gitkeep') {
+        continue
+      }
+      
       const filePath = path.join(directoryPath, file)
       const stat = await fs.promises.lstat(filePath)
       if (stat.isDirectory()) {
