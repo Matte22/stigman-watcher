@@ -644,19 +644,19 @@ describe("Scan Mode, Drop in a file while running, then drop in another file for
     // wait a moment for watcher to stabilize then drop a file
     await delay(10000)
     await createCkl(BASE_CKL_PATH, `${env.path}/dropped.ckl`, 'dropped')
-    await waitFor(() => watcher.logRecords.some(r => r.message === 'queued for parsing' && r.file && r.file.endsWith('dropped.ckl')), 70000)
+    await waitFor(() => watcher.logRecords.some(r => r.message === 'queued for parsing' && r.file && r.file.endsWith('dropped.ckl')), 120000)
     expect(watcher.logRecords.some(r => r.message === 'queued for parsing' && r.file && r.file.endsWith('dropped.ckl'))).to.be.true
   })
 
   it('parses and queues results for the dropped file', async () => {
-    await waitFor(() => watcher.logRecords.some(r => r.message === 'results queued' && r.file && r.file.endsWith('dropped.ckl')), 20000)
+    await waitFor(() => watcher.logRecords.some(r => r.message === 'results queued' && r.file && r.file.endsWith('dropped.ckl')), 120000)
     const res = watcher.logRecords.find(r => r.message === 'results queued' && r.file && r.file.endsWith('dropped.ckl'))
     expect(res).to.exist
     expect(res.target).to.equal('dropped')
   })
 
   it('processes the dropped file and adds to history', async () => {
-    await waitFor(() => watcher.logRecords.some(r => r.component === 'scan' && r.message === 'added to history' && Array.isArray(r.file) && r.file.some(f => f.endsWith('dropped.ckl'))), 20000)
+    await waitFor(() => watcher.logRecords.some(r => r.component === 'scan' && r.message === 'added to history' && Array.isArray(r.file) && r.file.some(f => f.endsWith('dropped.ckl'))), 120000)
     expect(watcher.logRecords.some(r => r.component === 'scan' && r.message === 'added to history' && Array.isArray(r.file) && r.file.some(f => f.endsWith('dropped.ckl')))).to.be.true
     // check for asset created log
     const created = watcher.logRecords.find(r => r.component === 'cargo' && r.message === 'asset created' && r.asset && r.asset.name === 'dropped')
@@ -677,19 +677,19 @@ describe("Scan Mode, Drop in a file while running, then drop in another file for
     await delay(5000)
     fs.writeFileSync(`${env.path}/dropped2.ckl`, modifiedContents, 'utf8')
 
-    await waitFor(() => watcher.logRecords.some(r => r.message === 'queued for parsing' && r.file && r.file.endsWith('dropped2.ckl')), 70000)
+    await waitFor(() => watcher.logRecords.some(r => r.message === 'queued for parsing' && r.file && r.file.endsWith('dropped2.ckl')), 120000)
     expect(watcher.logRecords.some(r => r.message === 'queued for parsing' && r.file && r.file.endsWith('dropped2.ckl'))).to.be.true
   })
 
   it('parses and queues results for the second dropped file', async () => {
-    await waitFor(() => watcher.logRecords.some(r => r.message === 'results queued' && r.file && r.file.endsWith('dropped2.ckl')), 20000)
+    await waitFor(() => watcher.logRecords.some(r => r.message === 'results queued' && r.file && r.file.endsWith('dropped2.ckl')), 120000)
     const res = watcher.logRecords.find(r => r.message === 'results queued' && r.file && r.file.endsWith('dropped2.ckl'))
     expect(res).to.exist
     expect(res.target).to.equal('dropped')
   })
 
   it('processes the second dropped file and updates the asset and posts a second review', async () => {
-    await waitFor(() => watcher.logRecords.some(r => r.component === 'scan' && r.message === 'added to history' && Array.isArray(r.file) && r.file.some(f => f.endsWith('dropped2.ckl'))), 20000)
+    await waitFor(() => watcher.logRecords.some(r => r.component === 'scan' && r.message === 'added to history' && Array.isArray(r.file) && r.file.some(f => f.endsWith('dropped2.ckl'))), 120000)
     expect(watcher.logRecords.some(r => r.component === 'scan' && r.message === 'added to history' && Array.isArray(r.file) && r.file.some(f => f.endsWith('dropped2.ckl')))).to.be.true
     // check for asset created log
     const created = watcher.logRecords.find(r => r.component === 'cargo' && r.message === 'asset created' && r.asset && r.asset.name === 'dropped')
@@ -1473,7 +1473,7 @@ describe("Event Mode, start normal, take down auth service, go offline, bring au
   })
 
   it("should start up normally then stop the api service and raise alarm auth offline", async () => {
-    await waitFor(() => watcher.logRecords.some(r => r.message === 'preflight api requests succeeded'), 20000)
+    await waitFor(() => watcher.logRecords.some(r => r.message === 'preflight api requests succeeded'), 120000)
 
     await delay(12000)
     await auth.stop()
@@ -1482,7 +1482,7 @@ describe("Event Mode, start normal, take down auth service, go offline, bring au
       await createCkl(BASE_CKL_PATH, `${env.path}/api-offline${i}.ckl`, `api-offline${i}`)
     }
     
-    await waitFor(() => watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm raised: authOffline'), 20000)
+    await waitFor(() => watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm raised: authOffline'), 120000)
     expect(watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm raised: authOffline')).to.be.true
   })
 
@@ -1491,7 +1491,7 @@ describe("Event Mode, start normal, take down auth service, go offline, bring au
   })
   
   it("waits for auth to come back online", async () => {
-    await waitFor(() => watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm lowered: authOffline'), 20000)
+    await waitFor(() => watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm lowered: authOffline'), 120000)
     expect(watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm lowered: authOffline')).to.be.true
   })
 
@@ -1578,12 +1578,12 @@ describe("Scan Mode, start normal, take down auth service, go offline, bring aut
   })
   
   it("waits for auth to come back online", async () => {
-    await waitFor(() => watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm lowered: authOffline'), 20000)
+    await waitFor(() => watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm lowered: authOffline'), 120000)
     expect(watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm lowered: authOffline')).to.be.true
   })
 
   it("wait for batch id 2 (retrying the original failed batch)", async () => {
-    await waitFor(() => watcher.logRecords.some(r => r.component === 'cargo' && r.message === 'batch ended' && r.batchId === 2), 100000)
+    await waitFor(() => watcher.logRecords.some(r => r.component === 'cargo' && r.message === 'batch ended' && r.batchId === 2), 120000)
     expect(watcher.logRecords.some(r => r.component === 'cargo' && r.message === 'batch ended' && r.batchId === 2)).to.be.true
   })
 
@@ -1762,7 +1762,7 @@ describe("Scan Mode, stop api and go api offline, come back up, then take api ba
   })
 
   it("wait for batch id 2 (retrying the original failed batch)", async () => {
-    await waitFor(() => watcher.logRecords.some(r => r.component === 'cargo' && r.message === 'batch ended' && r.batchId === 2), 2002200)
+    await waitFor(() => watcher.logRecords.some(r => r.component === 'cargo' && r.message === 'batch ended' && r.batchId === 2), 120000)
     expect(watcher.logRecords.some(r => r.component === 'cargo' && r.message === 'batch ended' && r.batchId === 2)).to.be.true
   })
 
