@@ -64,8 +64,6 @@ export async function runWatcherPromise ({
       env.collectionId,
       '--client-id',
       env.clientId,
-      '--prompt',
-      env.clientSecret,
       '--path',
       env.path,
       ...(env.oneShot ? ['--one-shot'] : []),
@@ -90,9 +88,15 @@ export async function runWatcherPromise ({
       ...(env.addExisting ? ['--add-existing'] : [])
     ]
     // pass options
+
+    const watcherEnv = {
+      ...env,
+      WATCHER_CLIENT_SECRET: env.clientSecret
+    }
+
     const watcher = spawn(nodeCmd, args, {
       // stdio: logToConsole ? 'inherit' : 'ignore',
-      env: { ...env }
+      env: watcherEnv
     })
 
     watcher.on('error', err => {
@@ -161,8 +165,6 @@ export async function runWatcher ({
       env.collectionId,
       '--client-id',
       env.clientId,
-      '--prompt',
-      env.clientSecret,
       '--path',
       env.path,
       ...(env.oneShot ? ['--one-shot'] : []),
@@ -192,10 +194,15 @@ export async function runWatcher ({
       options.push('--inspect-brk')
     }
     options.push(indexJsPath)
+        const watcherEnv = {
+      ...env,
+      WATCHER_CLIENT_SECRET: env.clientSecret
+    }
+
 
     const watcher = spawn(nodeCmd, args, {
       // stdio: logToConsole ? 'inherit' : 'ignore',
-      env: { ...env }
+      env: watcherEnv
     })
 
     const value = {
@@ -280,7 +287,8 @@ export async function startApi () {
   // wait specifically for the JSON log line with "component":"server","type":"started"
   const api = await new GenericContainer('nuwcdivnpt/stig-manager:latest')
     .withPullPolicy(PullPolicy.alwaysPull())
-    .withExposedPorts(54000)
+    //.withExposedPorts(54000)
+    .withExposedPorts({ container: 54000, host: 54001 })
     .withNetwork(net)
     .withNetworkAliases('api')
     .withEnvironment({ STIGMAN_DB_PORT: 3306 })
@@ -326,7 +334,16 @@ export async function stopProcesses (processNames) {
   for (const name of processNames) {
     await name.stop()
   }
-  if (net) await net.stop()
+  if (net) {
+    await net.stop()
+    net = null // Reset so next initNetwork() can create a fresh network
+  }
+}
+
+export async function stopProcessesOnly (processNames) {
+  for (const name of processNames) {
+    await name.stop()
+  }
 }
 
 export async function createWatcherUser () {
@@ -337,7 +354,7 @@ export async function createWatcherUser () {
     username: 'stigman-watcher'
   }
   const res = await fetch(
-    `http://${apiHost}:${apiPort}/api/users?elevate=true`,
+    `http://${apiHost ? apiHost : "localhost"}:${apiPort ? apiPort : 54001}/api/users?elevate=true`,
     {
       method: 'POST',
       headers: {
@@ -414,7 +431,7 @@ export async function createCollection (collectionPost, userId) {
 
   const username = 'stigmanadmin'
   const res = await fetch(
-    `http://${apiHost}:${apiPort}/api/collections?elevate=true&projection=grants&projection=labels`,
+    `http://${apiHost ? apiHost : "localhost"}:${apiPort ? apiPort : 54001}/api/collections?elevate=true&projection=grants&projection=labels`,
     {
       method: 'POST',
       headers: {

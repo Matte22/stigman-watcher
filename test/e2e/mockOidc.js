@@ -615,7 +615,18 @@ class MockOidc {
           }
           const base64Credentials = basicAuth.split(' ')[1]
           const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8')
-          const [clientId] = credentials.split(':')
+          const [clientId, clientSecret] = credentials.split(':')
+          
+          // Validate client credentials - expect specific client ID and secret
+          const validClientId = 'stigman-watcher'
+          const validClientSecret = '954fd71a-dad6-47ab-8035-060268f3d396'
+          
+          if (clientId !== validClientId || clientSecret !== validClientSecret) {
+            response.writeHead(401, { 'Content-Type': 'application/json' })
+            response.end(JSON.stringify({ error: 'invalid_client', error_description: 'Invalid client credentials' }))
+            return
+          }
+          
           // Check for scope parameter
           if (!params.has('scope')) {
             response.writeHead(400)

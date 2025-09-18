@@ -1,9 +1,10 @@
-name: Run Unit Tests and Upload Coverage Artifact
+name: Run Tests and Upload Coverage Artifact
 on:
   workflow_dispatch:
   push:
     branches:
         - main
+        - e2e
     paths:
         - "lib/**"
         - "index.js"
