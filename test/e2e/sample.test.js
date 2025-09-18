@@ -1,6 +1,6 @@
 import { setTimeout as delay } from "node:timers/promises"
 import { expect } from "chai"
-import { writeToHistoryFile, createAsset, stopProcessesOnly, runWatcher, uploadTestStig, clearDirectory, createCkl, waitFor,clearHistoryFileContents, initWatcherTestCollection, startApi, startAuth, startDb, stopProcesses, initNetwork, runWatcherPromise } from "./lib.js"
+import { writeToHistoryFile, createAsset, stopProcessesOnly, runWatcher, uploadTestStig, clearDirectory, createCkl, waitFor,clearHistoryFileContents, initWatcherTestCollection, startApi, startAuth, startDb, stopProcesses, initNetwork, runWatcherPromise, } from "./lib.js"
 import path, { resolve as pathResolve } from 'node:path'
 import fs from 'fs'
 
@@ -48,7 +48,7 @@ describe("One shot Mode Scan mode, Single Ckl file processing.", async function 
   })
   
   after(async () => {
-    stopProcesses([api, auth, db])
+    stopProcessesOnly([api, auth, db])
   })
 
   it("should log the correct startup messag with config etc. ", async () => {
@@ -294,7 +294,7 @@ describe("Scan Mode One-shot — finds files 3 levels deep and processes them", 
 	})
 
 	after(async () => {
-		stopProcesses([api, auth, db])
+		stopProcessesOnly([api, auth, db])
 		clearDirectory(env.path)
 	})
 
@@ -384,7 +384,7 @@ describe("Event Mode One-shot — finds files 3 levels deep and processes them",
 	})
 
 	after(async () => {
-		stopProcesses([api, auth, db])
+		stopProcessesOnly([api, auth, db])
 		clearDirectory(env.path)
 	})
 
@@ -466,7 +466,7 @@ describe("One shot mode Scan, many files in nested structure with multiple batch
   })
   
   after(async () => {
-    stopProcesses([api, auth, db])
+    stopProcessesOnly([api, auth, db])
     clearDirectory("test/e2e/scrapFiles")
   })
 
@@ -631,7 +631,7 @@ describe("Scan Mode, Drop in a file while running, then drop in another file for
         watcher.process.kill()
       }
     } catch (e) {}
-    stopProcesses([api, auth, db])
+    stopProcessesOnly([api, auth, db])
     clearDirectory(env.path)
   })
 
@@ -750,7 +750,7 @@ describe("Event Mode, Drop in a file while running", async function () {
         watcher.process.kill()
       }
     } catch (e) {}
-    stopProcesses([api, auth, db])
+    stopProcessesOnly([api, auth, db])
   })
 
   it('starts running (non-promise watcher)', async () => {
@@ -861,7 +861,7 @@ describe("Start in One shot mode with no files expect exit", async function () {
   
 
   after(async () => {
-    stopProcesses([api, auth, db])
+    stopProcessesOnly([api, auth, db])
   })
 
 
@@ -954,7 +954,7 @@ describe("Scan Mode, should skip files in already in history", async function ()
   })
 
   after(async () => {
-    stopProcesses([api, auth, db])
+    stopProcessesOnly([api, auth, db])
   })
 
   it("Should start up correctly", async () => {
@@ -1017,7 +1017,7 @@ describe("Scan Mode, One shot, should not find the stig accociated with the asse
   
 
   after(async () => {
-    stopProcesses([api, auth, db])
+    stopProcessesOnly([api, auth, db])
   })
 
   it("should log the correct startup messag with config etc. ", async () => {
@@ -1150,7 +1150,7 @@ describe("Event Mode, One shot, should not create new objects", async function (
   })
 
   after(async () => {
-    stopProcesses([api, auth, db])
+    stopProcessesOnly([api, auth, db])
   })
 
   it('starts running (non-promise watcher)', async () => {
@@ -1246,7 +1246,7 @@ describe("Test Ignore Glob / Ignore Dot, Should not scan any files in the ignore
   })
   
   after(async () => {
-    stopProcesses([api, auth, db])
+    stopProcessesOnly([api, auth, db])
     clearDirectory("test/e2e/scrapFiles")
   })
 
@@ -1369,7 +1369,7 @@ describe("Should create new asset Stig accociations for an existing asset. ", as
 	})
 
 	after(async () => {
-		stopProcesses([api, auth, db])
+		stopProcessesOnly([api, auth, db])
 	})
 
 	it('starts and reports config', async () => {
@@ -1469,7 +1469,7 @@ describe("Event Mode, start normal, take down auth service, go offline, bring au
         watcher.process.kill()
       }
     } catch (e) {}
-    stopProcesses([api, auth, db])
+    stopProcessesOnly([api, auth, db])
   })
 
   it("should start up normally then stop the api service and raise alarm auth offline", async () => {
@@ -1557,7 +1557,7 @@ describe("Scan Mode, start normal, take down auth service, go offline, bring aut
         watcher.process.kill()
       }
     } catch (e) {}
-    stopProcesses([api, auth, db])
+    stopProcessesOnly([api, auth, db])
   })
 
   it("should start up normally then stop the api service and raise alarm auth offline", async () => {
@@ -1642,7 +1642,7 @@ describe("Event Mode, stop api and go api offline, come back up, then take api b
         watcher.process.kill()
       }
     } catch (e) {}
-    stopProcesses([api, auth, db])
+    stopProcessesOnly([api, auth, db])
   })
 
   
@@ -1729,7 +1729,7 @@ describe("Scan Mode, stop api and go api offline, come back up, then take api ba
         watcher.process.kill()
       }
     } catch (e) {}
-    stopProcesses([api, auth, db])
+    stopProcessesOnly([api, auth, db])
     clearDirectory("test/e2e/scrapFiles")
   })
 
