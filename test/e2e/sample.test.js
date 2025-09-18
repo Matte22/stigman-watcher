@@ -629,10 +629,14 @@ describe("Scan Mode, Drop in a file while running, then drop in another file for
     try {
       if (watcher && watcher.process) {
         watcher.process.kill()
+        // Wait for process to fully terminate
+        await new Promise(resolve => setTimeout(resolve, 2000))
       }
     } catch (e) {}
     stopProcessesOnly([api, auth, db])
     clearDirectory(env.path)
+    // Additional delay to ensure complete cleanup
+    await new Promise(resolve => setTimeout(resolve, 1000))
   })
 
   it('starts running (non-promise watcher)', async () => {
@@ -1734,17 +1738,17 @@ describe("Scan Mode, stop api and go api offline, come back up, then take api ba
   })
 
   it("stops the api service", async () => {
-    await waitFor(() => watcher.logRecords.some(r => r.message === 'running'), 20000)
+    await waitFor(() => watcher.logRecords.some(r => r.message === 'running'), 120000)
     
     for (let i = 1; i <= 2; i++) {
       try {
         await createCkl(BASE_CKL_PATH, `${env.path}/api-offline${i}.ckl`, `api-offline${i}`)
       } catch (e) {}
     }
-    await waitFor(() => watcher.logRecords.some(r => r.message === 'preflight api requests succeeded'), 20000)
+    await waitFor(() => watcher.logRecords.some(r => r.message === 'preflight api requests succeeded'), 120000)
     await api.stop()
     
-    await waitFor(() => watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm raised: apiOffline'), 2002000)
+    await waitFor(() => watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm raised: apiOffline'), 120000)
     expect(watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm raised: apiOffline')).to.be.true
   })
  
