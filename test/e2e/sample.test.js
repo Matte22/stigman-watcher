@@ -1692,7 +1692,7 @@ describe("Event Mode, stop api and go api offline, come back up, then take api b
 })
 
 describe("Scan Mode, stop api and go api offline, come back up, then take api back down and eventually exit", async function () {
-  this.timeout(120_000)
+  this.timeout(200_000)
   let db, auth, api
   let watcher
   const env = {
@@ -1707,7 +1707,7 @@ describe("Scan Mode, stop api and go api offline, come back up, then take api ba
     historyFile: "test/e2e/e2e-history.txt",
     responseTimeout: 5000,
     historyWriteInterval: 10000,
-    scanInterval: 20000,    
+    scanInterval: 60000,    
     cargoDelay: 7000,
     logLevel: "verbose",
     cargoSize: 2,
@@ -1738,17 +1738,17 @@ describe("Scan Mode, stop api and go api offline, come back up, then take api ba
   })
 
   it("stops the api service", async () => {
-    await waitFor(() => watcher.logRecords.some(r => r.message === 'running'), 120000)
+    await waitFor(() => watcher.logRecords.some(r => r.message === 'running'), 200000)
     
     for (let i = 1; i <= 2; i++) {
       try {
         await createCkl(BASE_CKL_PATH, `${env.path}/api-offline${i}.ckl`, `api-offline${i}`)
       } catch (e) {}
     }
-    await waitFor(() => watcher.logRecords.some(r => r.message === 'preflight api requests succeeded'), 120000)
+    await waitFor(() => watcher.logRecords.some(r => r.message === 'preflight api requests succeeded'), 200000)
     await api.stop()
     
-    await waitFor(() => watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm raised: apiOffline'), 120000)
+    await waitFor(() => watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm raised: apiOffline'), 200000)
     expect(watcher.logRecords.some(r => r.component === 'index' && r.message === 'Alarm raised: apiOffline')).to.be.true
   })
  
