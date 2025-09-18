@@ -1,2 +1,0 @@
-# This file ensures the scrapFiles directory is tracked by Git
-# The directory is used by e2e tests as a working directory for test files

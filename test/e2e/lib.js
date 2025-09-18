@@ -18,7 +18,6 @@ const nodeCmd = process.env.GITHUB_RUN_ID
   : process.execPath
 const AUTH_PORT = 8080
 let apiHost, apiPort
-let dbPort
 let net
 let auth
 
@@ -36,7 +35,6 @@ export async function initNetwork () {
 export async function runWatcherPromise ({
   entry = 'index.js',
   env = {},
-  logToConsole = true,
   inspect = false,
   consoleLog = false,
   resolveOnClose = true,
@@ -87,7 +85,6 @@ export async function runWatcherPromise ({
       `${env.cargoSize}`,
       ...(env.addExisting ? ['--add-existing'] : [])
     ]
-    // pass options
 
     const watcherEnv = {
       ...env,
@@ -95,7 +92,6 @@ export async function runWatcherPromise ({
     }
 
     const watcher = spawn(nodeCmd, args, {
-      // stdio: logToConsole ? 'inherit' : 'ignore',
       env: watcherEnv
     })
 
@@ -145,7 +141,6 @@ export async function runWatcherPromise ({
 export async function runWatcher ({
   entry = 'index.js',
   env = {},
-  logToConsole = true,
   inspect = false,
   consoleLog = false
 }) {
@@ -201,7 +196,6 @@ export async function runWatcher ({
 
 
     const watcher = spawn(nodeCmd, args, {
-      // stdio: logToConsole ? 'inherit' : 'ignore',
       env: watcherEnv
     })
 
@@ -224,37 +218,6 @@ export async function runWatcher ({
   } catch (err) {
     console.error('Error in runWatcher:', err)
     throw err
-  }
-}
-
-export function getPorts (basePort) {
-  return {
-    apiPort: basePort,
-    dbPort: basePort + 1,
-    oidcPort: basePort + 2,
-    apiOrigin: `http://localhost:${basePort}`,
-    oidcOrigin: `http://localhost:${basePort + 2}`
-  }
-}
-
-const executeRequest = async (url, method, token, body = null) => {
-  const options = {
-    method,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    },
-    body: body ? JSON.stringify(body) : null
-  }
-  const response = await fetch(url, options)
-  const headers = {}
-  response.headers.forEach((value, key) => {
-    headers[key] = value
-  })
-  return {
-    status: response.status,
-    headers,
-    body: await response.json().catch(() => ({}))
   }
 }
 
@@ -284,7 +247,6 @@ export async function startAuth () {
 }
 
 export async function startApi () {
-  // wait specifically for the JSON log line with "component":"server","type":"started"
   const api = await new GenericContainer('nuwcdivnpt/stig-manager:latest')
     .withPullPolicy(PullPolicy.alwaysPull())
     //.withExposedPorts(54000)
@@ -331,16 +293,6 @@ export function waitChildClose (child) {
 }
 
 export async function stopProcesses (processNames) {
-  for (const name of processNames) {
-    await name.stop()
-  }
-  if (net) {
-    await net.stop()
-    net = null // Reset so next initNetwork() can create a fresh network
-  }
-}
-
-export async function stopProcessesOnly (processNames) {
   for (const name of processNames) {
     await name.stop()
   }
@@ -586,7 +538,6 @@ export async function writeToHistoryFile (historyFilePath, entries) {
     throw err
   }
 }
-
 
 export async function createAsset (assetPost, collectionId) {
   // if no assetPost is passed in, use the default
